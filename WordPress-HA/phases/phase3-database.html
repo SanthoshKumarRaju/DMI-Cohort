@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 3: Database Tier | EpicBooks Blog</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <div data-include="../components/header.html"></div>
+
+    <div class="container">
+        <div class="content-wrapper">
+            <main>
+                <article class="blog-post">
+                    <h1>Phase 3: Database Tier Implementation</h1>
+                    <p class="post-meta"><time datetime="2025-09-18">September 18, 2025</time> | Author: Santhosh Kumar Raju</p>
+                    
+                    <div class="intro">
+                        <p>In this phase, we set up a highly available Amazon RDS MySQL instance in private subnets. The database is the backbone of our WordPress application, and we've configured it for both performance and reliability.</p>
+                    </div>
+                    
+                    <h2>RDS Database Configuration</h2>
+                    <p>We created an Amazon RDS MySQL instance with the following specifications:</p>
+                    
+                    <div class="config-card">
+                        <h3><i class="fas fa-cog"></i> Basic Configuration</h3>
+                        <ul>
+                            <li><strong>DB Identifier:</strong> wordpress1</li>
+                            <li><strong>Engine:</strong> MySQL 8.0</li>
+                            <li><strong>Instance Class:</strong> db.t3.micro (for development)</li>
+                            <li><strong>Storage:</strong> 20 GB General Purpose SSD (gp2)</li>
+                            <li><strong>Multi-AZ Deployment:</strong> Enabled for high availability</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="config-card">
+                        <h3><i class="fas fa-network-wired"></i> Network & Security</h3>
+                        <ul>
+                            <li><strong>VPC:</strong> epicbooks</li>
+                            <li><strong>Subnet Group:</strong> Custom group with private subnets (epicbook-private-1, epicbook-private-2)</li>
+                            <li><strong>Publicly Accessible:</strong> No</li>
+                            <li><strong>VPC Security Group:</strong> db-sg</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="config-card">
+                        <h3><i class="fas fa-user-lock"></i> Database Authentication</h3>
+                        <ul>
+                            <li><strong>Master Username:</strong> wordpressuser</li>
+                            <li><strong>Password:</strong> StrongPassword123! (auto-generated and stored in Secrets Manager)</li>
+                            <li><strong>Database Name:</strong> wordpress</li>
+                        </ul>
+                    </div>
+                    
+                    <h2>Database Creation Process</h2>
+                    <p>We created the WordPress database and user through the MySQL client:</p>
+                    
+                    <pre><code># Connect to the RDS instance from a bastion host or EC2 instance
+mysql -h wordpress1.123456789012.us-east-1.rds.amazonaws.com -u admin -p
+
+# Create the WordPress database and user
+CREATE DATABASE wordpress;
+CREATE USER 'wordpressuser'@'%' IDENTIFIED BY 'StrongPassword123!';
+GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpressuser'@'%';
+FLUSH PRIVILEGES;
+EXIT;
+</code></pre>
+                    
+                    <h2>Backup and Maintenance</h2>
+                    <p>We configured automated backups and maintenance for the database:</p>
+                    
+                    <div class="backup-config">
+                        <div class="backup-item">
+                            <i class="fas fa-history"></i>
+                            <h3>Automated Backups</h3>
+                            <p>Enabled with 7-day retention period. Daily snapshots are taken during the preferred backup window.</p>
+                        </div>
+                        
+                        <div class="backup-item">
+                            <i class="fas fa-clone"></i>
+                            <h3>Multi-AZ Deployment</h3>
+                            <p>Synchronous replication to a standby instance in a different Availability Zone for failover support.</p>
+                        </div>
+                        
+                        <div class="backup-item">
+                            <i class="fas fa-wrench"></i>
+                            <h3>Maintenance Window</h3>
+                            <p>Configured for weekly maintenance during off-peak hours to minimize application impact.</p>
+                        </div>
+                    </div>
+                    
+                    <h2>Performance Considerations</h2>
+                    <p>To ensure optimal database performance for WordPress:</p>
+                    
+                    <ul>
+                        <li>Enabled Performance Insights for database monitoring</li>
+                        <li>Configured parameter group with optimized MySQL settings for WordPress</li>
+                        <li>Set up CloudWatch alarms for CPU utilization and storage space</li>
+                        <li>Enabled slow query logging to identify performance bottlenecks</li>
+                    </ul>
+                    
+                    <div class="conclusion">
+                        <h2>Summary</h2>
+                        <p>By deploying our MySQL database on Amazon RDS in private subnets, we've created a secure, highly available database tier for our WordPress application. The Multi-AZ deployment ensures database resilience, while the security group configuration restricts access to only the web servers. Automated backups and performance monitoring provide operational excellence and help maintain the health of our database environment.</p>
+                    </div>
+                    
+                    <div class="navigation">
+                        <a href="phase2-security.html" class="btn-primary">&larr; Previous: Phase 2 - Security Configuration</a>
+                        <a href="phase4-web-tier.html" class="btn-primary">Next: Phase 4 - Web Tier Setup &rarr;</a>
+                    </div>
+                </article>
+            </main>
+            
+            <!-- Sidebar -->
+            <div data-include="../components/sidebar.html"></div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div data-include="../components/footer.html"></div>
+
+    <script>
+        // Function to include HTML components
+        document.addEventListener('DOMContentLoaded', function() {
+            var includes = document.querySelectorAll('[data-include]');
+            includes.forEach(function(include) {
+                var file = include.getAttribute('data-include');
+                fetch(file)
+                    .then(response => response.text())
+                    .then(data => {
+                        include.outerHTML = data;
+                    });
+            });
+        });
+    </script>
+</body>
+</html>

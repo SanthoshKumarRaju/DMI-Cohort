@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 4: Web Tier Setup | EpicBooks Blog</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <div data-include="../components/header.html"></div>
+
+    <div class="container">
+        <div class="content-wrapper">
+            <main>
+                <article class="blog-post">
+                    <h1>Phase 4: Web Tier Setup</h1>
+                    <p class="post-meta"><time datetime="2025-09-18">September 18, 2025</time> | Author: Santhosh Kumar Raju</p>
+                    
+                    <div class="intro">
+                        <p>In this phase, we configure the initial EC2 instance, install WordPress, and test the connection to RDS. This instance will serve as our template for creating the Amazon Machine Image (AMI) that will be used by the Auto Scaling Group.</p>
+                    </div>
+                    
+                    <h2>EC2 Instance Configuration</h2>
+                    <p>We launched a bootstrap EC2 instance with the following specifications:</p>
+                    
+                    <div class="config-card">
+                        <h3><i class="fas fa-server"></i> Instance Details</h3>
+                        <ul>
+                            <li><strong>Name:</strong> epicbooks</li>
+                            <li><strong>AMI:</strong> Amazon Linux 2</li>
+                            <li><strong>Instance Type:</strong> t3.micro</li>
+                            <li><strong>Subnet:</strong> epicbook-public-1 (for initial setup)</li>
+                            <li><strong>Security Group:</strong> web-sg</li>
+                        </ul>
+                    </div>
+                    
+                    <h2>Software Installation</h2>
+                    <p>We installed and configured the necessary software on the EC2 instance:</p>
+                    
+                    <pre><code># Update the system and install the Apache web server
+sudo yum update -y
+sudo yum install httpd -y
+sudo systemctl start httpd
+sudo systemctl enable httpd
+
+# Install PHP and the MySQL client libraries
+sudo amazon-linux-extras install php8.2 mariadb10.5 -y
+sudo yum install php php-{common,mysqlnd,xml,json,gd,mbstring} -y
+sudo systemctl restart httpd
+
+# Download and extract WordPress
+cd /tmp
+wget https://wordpress.org/latest.tar.gz
+tar -xzf latest.tar.gz
+
+# Copy WordPress files to the web directory
+sudo cp -r wordpress/* /var/www/html/
+
+# Set correct file permissions
+sudo chown -R apache:apache /var/www/html/
+sudo chmod -R 755 /var/www/html/
+</code></pre>
+                    
+                    <h2>WordPress Configuration</h2>
+                    <p>We configured WordPress to use the RDS database by editing the wp-config.php file:</p>
+                    
+                    <pre><code>// Edit the WordPress configuration file
+sudo cp /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
+sudo vi /var/www/html/wp-config.php
+
+// Update the database connection settings
+define( 'DB_NAME', 'wordpress' );
+define( 'DB_USER', 'wordpressuser' );
+define( 'DB_PASSWORD', 'StrongPassword123!' );
+define( 'DB_HOST', 'wordpress1.123456789012.us-east-1.rds.amazonaws.com' );
+
+// Add security keys for encryption
+define( 'AUTH_KEY',         'unique phrase here' );
+define( 'SECURE_AUTH_KEY',  'unique phrase here' );
+define( 'LOGGED_IN_KEY',    'unique phrase here' );
+define( 'NONCE_KEY',        'unique phrase here' );
+define( 'AUTH_SALT',        'unique phrase here' );
+define( 'SECURE_AUTH_SALT', 'unique phrase here' );
+define( 'LOGGED_IN_SALT',   'unique phrase here' );
+define( 'NONCE_SALT',       'unique phrase here' );
+</code></pre>
+                    
+                    <h2>Testing the Setup</h2>
+                    <p>We verified the setup by accessing the EC2 instance's public IP in a web browser:</p>
+                    
+                    <div class="test-steps">
+                        <div class="test-step">
+                            <span class="step-number">1</span>
+                            <h3>Access WordPress Installer</h3>
+                            <p>Navigated to http://13.201.49.242/ to access the WordPress installation page.</p>
+                        </div>
+                        
+                        <div class="test-step">
+                            <span class="step-number">2</span>
+                            <h3>Complete Installation</h3>
+                            <p>Completed the WordPress famous "5-minute installation" to confirm the web server could connect to the database.</p>
+                        </div>
+                        
+                        <div class="test-step">
+                            <span class="step-number">3</span>
+                            <h3>Verify Functionality</h3>
+                            <p>Created test content and verified that the WordPress site was functioning correctly.</p>
+                        </div>
+                    </div>
+                    
+                    <h2>Post-Installation Configuration</h2>
+                    <p>After successful installation, we performed additional configuration:</p>
+                    
+                    <ul>
+                        <li>Configured WordPress permalinks for SEO-friendly URLs</li>
+                        <li>Installed and configured essential plugins for security and performance</li>
+                        <li>Set up a default theme and configured basic site settings</li>
+                        <li>Created administrative users with strong passwords</li>
+                        <li>Configured WordPress to use S3 for media storage (optional)</li>
+                    </ul>
+                    
+                    <div class="conclusion">
+                        <h2>Summary</h2>
+                        <p>The web tier setup phase successfully established a functional WordPress instance connected to our RDS database. This instance serves as our golden image that will be used to create the AMI for the Auto Scaling Group. We've verified that all components are working together correctly and that WordPress can communicate with the database backend. The next phase will focus on automating the scaling process to create a highly available architecture.</p>
+                    </div>
+                    
+                    <div class="navigation">
+                        <a href="phase3-database.html" class="btn-primary">&larr; Previous: Phase 3 - Database Tier</a>
+                        <a href="phase5-automation.html" class="btn-primary">Next: Phase 5 - Automation & Scaling &rarr;</a>
+                    </div>
+                </article>
+            </main>
+            
+            <!-- Sidebar -->
+            <div data-include="../components/sidebar.html"></div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div data-include="../components/footer.html"></div>
+
+    <script>
+        // Function to include HTML components
+        document.addEventListener('DOMContentLoaded', function() {
+            var includes = document.querySelectorAll('[data-include]');
+            includes.forEach(function(include) {
+                var file = include.getAttribute('data-include');
+                fetch(file)
+                    .then(response => response.text())
+                    .then(data => {
+                        include.outerHTML = data;
+                    });
+            });
+        });
+    </script>
+</body>
+</html>

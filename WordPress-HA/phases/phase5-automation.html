@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 5: Automation and Scaling | EpicBooks Blog</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <div data-include="../components/header.html"></div>
+
+    <div class="container">
+        <div class="content-wrapper">
+            <main>
+                <article class="blog-post">
+                    <h1>Phase 5: Automation and Scaling</h1>
+                    <p class="post-meta"><time datetime="2025-09-18">September 18, 2025</time> | Author: Santhosh Kumar Raju</p>
+                    
+                    <div class="intro">
+                        <p>In this final phase, we create an AMI, launch template, Application Load Balancer, and Auto Scaling Group to achieve horizontal scaling and high availability for our WordPress application.</p>
+                    </div>
+                    
+                    <h2>Creating an Amazon Machine Image (AMI)</h2>
+                    <p>We created an AMI from our configured EC2 instance to serve as a template for new servers:</p>
+                    
+                    <div class="config-card">
+                        <h3><i class="fas fa-camera"></i> AMI Creation</h3>
+                        <ul>
+                            <li><strong>Source:</strong> The configured epicbooks EC2 instance</li>
+                            <li><strong>Name:</strong> epicbooks-wordpress-ami</li>
+                            <li><strong>Description:</strong> WordPress with Apache, PHP, and MySQL client</li>
+                            <li><strong>Purpose:</strong> Template for new servers in the Auto Scaling Group</li>
+                        </ul>
+                    </div>
+                    
+                    <h2>Launch Template Configuration</h2>
+                    <p>We created a launch template with the following configuration:</p>
+                    
+                    <pre><code># Example AWS CLI command to create a launch template
+aws ec2 create-launch-template \
+    --launch-template-name epicbooks-lt \
+    --version-description "WordPress template" \
+    --launch-template-data '{
+        "ImageId": "ami-1234567890abcdef0",
+        "InstanceType": "t3.micro",
+        "KeyName": "my-key-pair",
+        "SecurityGroupIds": ["sg-903004f8"],
+        "UserData": "IyEvYmluL2Jhc2gKc3VkbyB5dW0gdXBkYXRlIC15CnN1ZG8gc3lzdGVtY3RsIHJlc3RhcnQgaHR0cGQ=",
+        "TagSpecifications": [{
+            "ResourceType": "instance",
+            "Tags": [{
+                "Key": "Name",
+                "Value": "epicbooks-web-server"
+            }]
+        }]
+    }'
+</code></pre>
+                    
+                    <h2>Target Group Setup</h2>
+                    <p>We created a target group for the Application Load Balancer to route traffic to healthy instances:</p>
+                    
+                    <div class="config-card">
+                        <h3><i class="fas fa-bullseye"></i> Target Group Configuration</h3>
+                        <ul>
+                            <li><strong>Name:</strong> epicbooks-tg</li>
+                            <li><strong>Target Type:</strong> Instances</li>
+                            <li><strong>Protocol:</strong> HTTP:80</li>
+                            <li><strong>Health Check Path:</strong> /wp-admin/install.php</li>
+                            <li><strong>Health Check Interval:</strong> 30 seconds</li>
+                        </ul>
+                    </div>
+                    
+                    <h2>Application Load Balancer (ALB)</h2>
+                    <p>We set up an Application Load Balancer to distribute traffic across our instances:</p>
+                    
+                    <div class="config-card">
+                        <h3><i class="fas fa-balance-scale"></i> ALB Configuration</h3>
+                        <ul>
+                            <li><strong>Name:</strong> epic-books-alb</li>
+                            <li><strong>Scheme:</strong> internet-facing</li>
+                            <li><strong>Listeners:</strong> HTTP:80</li>
+                            <li><strong>Subnets:</strong> epicbook-public-1, epicbook-public-2</li>
+                            <li><strong>Security Group:</strong> alb-sg</li>
+                            <li><strong>Target Group:</strong> epicbooks-tg</li>
+                        </ul>
+                    </div>
+                    
+                    <h2>Auto Scaling Group</h2>
+                    <p>We configured an Auto Scaling Group to maintain the desired number of instances:</p>
+                    
+                    <pre><code># Example AWS CLI command to create an Auto Scaling Group
+aws autoscaling create-auto-scaling-group \
+    --auto-scaling-group-name epicbooks-asg \
+    --launch-template LaunchTemplateName=epicbooks-lt,Version='$Latest' \
+    --min-size 2 \
+    --max-size 4 \
+    --desired-capacity 2 \
+    --vpc-zone-identifier "subnet-12345678,subnet-87654321" \
+    --target-group-arns "arn:aws:elasticloadbalancing:us-east-1:123456789012:targetgroup/epicbooks-tg/1234567890abcdef0"
+</code></pre>
+                    
+                    <h2>Scaling Policies</h2>
+                    <p>We implemented scaling policies to automatically adjust capacity based on demand:</p>
+                    
+                    <div class="scaling-policies">
+                        <div class="policy">
+                            <i class="fas fa-chart-line"></i>
+                            <h3>Target Tracking Policy</h3>
+                            <p>Scale based on average CPU utilization with a target value of 70%</p>
+                        </div>
+                        
+                        <div class="policy">
+                            <i class="fas fa-arrows-alt-h"></i>
+                            <h3>Step Scaling Policy</h3>
+                            <p>Add instances when CPU utilization exceeds 80% for 5 minutes</p>
+                        </div>
+                        
+                        <div class="policy">
+                            <i class="fas fa-clock"></i>
+                            <h3>Scheduled Actions</h3>
+                            <p>Increase capacity during expected high traffic periods</p>
+                        </div>
+                    </div>
+                    
+                    <h2>Final Validation</h2>
+                    <p>We tested the complete architecture to ensure everything was working correctly:</p>
+                    
+                    <div class="validation-steps">
+                        <div class="validation-step">
+                            <span class="step-number">1</span>
+                            <h3>ALB DNS Access</h3>
+                            <p>Accessed the application using the ALB DNS name: http://epicbooks-575533874.ap-south-1.elb.amazonaws.com/</p>
+                        </div>
+                        
+                        <div class="validation-step">
+                            <span class="step-number">2</span>
+                            <h3>Auto Scaling Test</h3>
+                            <p>Verified that the Auto Scaling Group launched the desired number of instances</p>
+                        </div>
+                        
+                        <div class="validation-step">
+                            <span class="step-number">3</span>
+                            <h3>Load Balancing Test</h3>
+                            <p>Confirmed that the ALB was correctly distributing traffic across instances</p>
+                        </div>
+                        
+                        <div class="validation-step">
+                            <span class="step-number">4</span>
+                            <h3>Scaling Test</h3>
+                            <p>Simulated load to trigger scaling policies and verified new instances were launched</p>
+                        </div>
+                    </div>
+                    
+                    <div class="conclusion">
+                        <h2>Summary</h2>
+                        <p>With the completion of the automation and scaling phase, we now have a fully functional, highly available WordPress architecture on AWS. The Auto Scaling Group ensures we have the right number of instances to handle traffic, while the Application Load Balancer distributes requests evenly across healthy instances. Our architecture can automatically scale to handle traffic spikes while maintaining performance and availability. The entire infrastructure is secure, with web servers in private subnets and proper security group configurations limiting access to only necessary resources.</p>
+                    </div>
+                    
+                    <div class="navigation">
+                        <a href="phase4-web-tier.html" class="btn-primary">&larr; Previous: Phase 4 - Web Tier Setup</a>
+                        <a href="../index.html" class="btn-primary">Back to Overview</a>
+                    </div>
+                </article>
+            </main>
+            
+            <!-- Sidebar -->
+            <div data-include="../components/sidebar.html"></div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div data-include="../components/footer.html"></div>
+
+    <script>
+        // Function to include HTML components
+        document.addEventListener('DOMContentLoaded', function() {
+            var includes = document.querySelectorAll('[data-include]');
+            includes.forEach(function(include) {
+                var file = include.getAttribute('data-include');
+                fetch(file)
+                    .then(response => response.text())
+                    .then(data => {
+                        include.outerHTML = data;
+                    });
+            });
+        });
+    </script>
+</body>
+</html>

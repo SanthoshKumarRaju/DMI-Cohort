@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 1: Network Foundation | EpicBooks Blog</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <div data-include="../components/header.html"></div>
+
+    <div class="container">
+        <div class="content-wrapper">
+            <main>
+                <article class="blog-post">
+                    <h1>Phase 1: Building the Network Foundation</h1>
+                    <p class="post-meta"><time datetime="2025-09-18">September 18, 2025</time> | Author: Santhosh Kumar Raju</p>
+                    
+                    <div class="intro">
+                        <p>In this phase, we establish the networking foundation for our highly available WordPress architecture. This includes creating a VPC, subnets, route tables, and an internet gateway.</p>
+                    </div>
+                    
+                    <h2>Creating the VPC</h2>
+                    <p>The Virtual Private Cloud (VPC) serves as the isolated network environment for all our resources. We created a VPC with the following configuration:</p>
+                    
+                    <ul>
+                        <li><strong>Name:</strong> epicbooks</li>
+                        <li><strong>CIDR Block:</strong> 10.0.0.0/16</li>
+                        <li><strong>Purpose:</strong> Provides an isolated virtual network for all project resources</li>
+                    </ul>
+                    
+                    <h2>Subnet Configuration</h2>
+                    <p>We created both public and private subnets across two availability zones for high availability:</p>
+                    
+                    <h3>Public Subnets</h3>
+                    <p>For resources that need direct internet access (ALB, NAT Gateway, Bastion Hosts):</p>
+                    <ul>
+                        <li><strong>epicbook-public-1</strong> in us-east-1a | CIDR: 10.0.0.0/24</li>
+                        <li><strong>epicbook-public-2</strong> in us-east-1b | CIDR: 10.0.1.0/24</li>
+                    </ul>
+                    
+                    <h3>Private Subnets</h3>
+                    <p>For resources that should not be directly accessible from the internet (EC2 Instances, RDS):</p>
+                    <ul>
+                        <li><strong>epicbook-private-1</strong> in us-east-1a | CIDR: 10.0.2.0/24</li>
+                        <li><strong>epicbook-private-2</strong> in us-east-1b | CIDR: 10.0.3.0/24</li>
+                    </ul>
+                    
+                    <h2>Internet Gateway</h2>
+                    <p>We created and attached an Internet Gateway to allow communication between resources in public subnets and the public internet:</p>
+                    <ul>
+                        <li><strong>Resource:</strong> Internet Gateway</li>
+                        <li><strong>Name:</strong> epic-books-igw</li>
+                        <li><strong>Action:</strong> Created and attached to the epicbooks VPC</li>
+                    </ul>
+                    
+                    <h2>Route Tables Configuration</h2>
+                    
+                    <h3>Public Route Table</h3>
+                    <ul>
+                        <li><strong>Name:</strong> epicbooks-public-rt</li>
+                        <li><strong>Associated Subnets:</strong> epicbook-public-1, epicbook-public-2</li>
+                        <li><strong>Routes:</strong>
+                            <ul>
+                                <li>10.0.0.0/16 → local (default, for internal VPC traffic)</li>
+                                <li>0.0.0.0/0 → igw-xxxxxxxx (sends all other traffic to the IGW)</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <h3>Private Route Table</h3>
+                    <ul>
+                        <li><strong>Name:</strong> epicbooks-private-rt</li>
+                        <li><strong>Associated Subnets:</strong> epicbook-private-1, epicbook-private-2</li>
+                        <li><strong>Routes:</strong>
+                            <ul>
+                                <li>10.0.0.0/16 → local (default, for internal VPC traffic)</li>
+                                <li>(Note: A NAT Gateway would be needed here for instances to get software updates)</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <div class="conclusion">
+                        <h2>Summary</h2>
+                        <p>This network foundation provides a secure, segmented environment for our WordPress application. The public subnets will host internet-facing resources, while the private subnets will secure our application servers and database. The route tables ensure proper traffic flow between these segments and the internet.</p>
+                    </div>
+                    
+                    <div class="navigation">
+                        <a href="../index.html" class="btn-primary">&larr; Back to Home</a>
+                        <a href="phase2-security.html" class="btn-primary">Next: Phase 2 - Security Configuration &rarr;</a>
+                    </div>
+                </article>
+            </main>
+            
+            <!-- Sidebar -->
+            <div data-include="../components/sidebar.html"></div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div data-include="../components/footer.html"></div>
+
+    <script>
+        // Function to include HTML components
+        document.addEventListener('DOMContentLoaded', function() {
+            var includes = document.querySelectorAll('[data-include]');
+            includes.forEach(function(include) {
+                var file = include.getAttribute('data-include');
+                fetch(file)
+                    .then(response => response.text())
+                    .then(data => {
+                        include.outerHTML = data;
+                    });
+            });
+        });
+    </script>
+</body>
+</html>

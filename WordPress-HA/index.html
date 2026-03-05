@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building HA WordPress on AWS | EpicBooks Blog</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <div data-include="components/header.html"></div>
+
+    <div class="container">
+        <div class="content-wrapper">
+            <main>
+                <article class="blog-post">
+                    <h1>Building a Highly Available WordPress Architecture on AWS</h1>
+                    <p class="post-meta">Published on: <time datetime="2025-09-18">September 18, 2025</time> | Author: Santhosh Kumar Raju</p>
+                    
+                    <div class="intro">
+                        <p>In this comprehensive guide, we'll walk through building a highly available and scalable WordPress architecture on AWS using a VPC, public and private subnets, an Auto Scaling Group of web servers, and a backend RDS database.</p>
+                    </div>
+                    
+                    <h2>Architecture Overview</h2>
+                    <div class="architecture-diagram">
+                        <img src="images/architecture-diagram.png" alt="AWS HA WordPress Architecture Diagram">
+                        <p class="caption">Two-tier highly available WordPress architecture on AWS</p>
+                    </div>
+                    
+                    <p>The infrastructure consists of two tiers:</p>
+                    <ul>
+                        <li><strong>Web Tier (Public):</strong> EC2 instances in an Auto Scaling Group behind an Application Load Balancer (ALB). Located in public subnets.</li>
+                        <li><strong>Database Tier (Private):</strong> An Amazon RDS MySQL instance. Located in private subnets for security.</li>
+                    </ul>
+                    
+                    <h2>Implementation Phases</h2>
+                    
+                    <div class="phase-summary">
+                        <h3><a href="phases/phase1-network.html">Phase 1: Network Foundation</a></h3>
+                        <p>Establishing the VPC, subnets, internet gateway, and route tables to create a secure networking environment.</p>
+                        <a href="phases/phase1-network.html" class="btn-primary">Read More</a>
+                    </div>
+                    
+                    <div class="phase-summary">
+                        <h3><a href="phases/phase2-security.html">Phase 2: Security Configuration</a></h3>
+                        <p>Implementing security groups to control traffic between application components.</p>
+                        <a href="phases/phase2-security.html" class="btn-primary">Read More</a>
+                    </div>
+                    
+                    <div class="phase-summary">
+                        <h3><a href="phases/phase3-database.html">Phase 3: Database Tier</a></h3>
+                        <p>Setting up a highly available Amazon RDS MySQL instance in private subnets.</p>
+                        <a href="phases/phase3-database.html" class="btn-primary">Read More</a>
+                    </div>
+                    
+                    <div class="phase-summary">
+                        <h3><a href="phases/phase4-web-tier.html">Phase 4: Web Tier Setup</a></h3>
+                        <p>Configuring the initial EC2 instance, installing WordPress, and testing the connection to RDS.</p>
+                        <a href="phases/phase4-web-tier.html" class="btn-primary">Read More</a>
+                    </div>
+                    
+                    <div class="phase-summary">
+                        <h3><a href="phases/phase5-automation.html">Phase 5: Automation and Scaling</a></h3>
+                        <p>Creating an AMI, launch template, ALB, and Auto Scaling Group for horizontal scaling.</p>
+                        <a href="phases/phase5-automation.html" class="btn-primary">Read More</a>
+                    </div>
+                    
+                    <h2>Key Benefits of This Architecture</h2>
+                    <div class="benefits-grid">
+                        <div class="benefit-card">
+                            <i class="fas fa-sync-alt"></i>
+                            <h3>High Availability</h3>
+                            <p>Multi-AZ deployment ensures service continuity</p>
+                        </div>
+                        <div class="benefit-card">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                            <h3>Scalability</h3>
+                            <p>Auto Scaling handles traffic spikes efficiently</p>
+                        </div>
+                        <div class="benefit-card">
+                            <i class="fas fa-shield-alt"></i>
+                            <h3>Security</h3>
+                            <p>Isolation of tiers and proper security group configuration</p>
+                        </div>
+                        <div class="benefit-card">
+                            <i class="fas fa-dollar-sign"></i>
+                            <h3>Cost Optimization</h3>
+                            <p>Pay only for resources you use with scaling</p>
+                        </div>
+                    </div>
+                    
+                    <div class="conclusion">
+                        <h2>Conclusion</h2>
+                        <p>This architecture provides a robust foundation for hosting WordPress on AWS with enterprise-grade availability, security, and scalability. By following the implementation phases detailed in this blog series, you can deploy a production-ready WordPress environment that can handle traffic fluctuations while maintaining performance and security.</p>
+                    </div>
+                </article>
+            </main>
+            
+            <!-- Sidebar -->
+            <div data-include="components/sidebar.html"></div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div data-include="components/footer.html"></div>
+
+    <script>
+        // Function to include HTML components
+        document.addEventListener('DOMContentLoaded', function() {
+            var includes = document.querySelectorAll('[data-include]');
+            includes.forEach(function(include) {
+                var file = include.getAttribute('data-include');
+                fetch(file)
+                    .then(response => response.text())
+                    .then(data => {
+                        include.outerHTML = data;
+                    });
+            });
+        });
+    </script>
+</body>
+</html>

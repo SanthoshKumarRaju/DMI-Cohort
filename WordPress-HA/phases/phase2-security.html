@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 2: Security Configuration | EpicBooks Blog</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <div data-include="../components/header.html"></div>
+
+    <div class="container">
+        <div class="content-wrapper">
+            <main>
+                <article class="blog-post">
+                    <h1>Phase 2: Security Configuration</h1>
+                    <p class="post-meta"><time datetime="2025-09-18">September 18, 2025</time> | Author: Santhosh Kumar Raju</p>
+                    
+                    <div class="intro">
+                        <p>In this phase, we implement security groups to control traffic between application components. Proper security group configuration is critical for protecting your AWS resources while allowing necessary communication.</p>
+                    </div>
+                    
+                    <h2>Security Groups Overview</h2>
+                    <p>Security Groups act as virtual firewalls for your EC2 instances to control incoming and outgoing traffic. We created three security groups for our architecture:</p>
+                    
+                    <div class="security-group-card">
+                        <h3><i class="fas fa-shield-alt"></i> ALB Security Group (alb-sg)</h3>
+                        <ul>
+                            <li><strong>Inbound Rules:</strong> Allow HTTP (port 80) from 0.0.0.0/0 (the public internet)</li>
+                            <li><strong>Outbound Rules:</strong> Allow all traffic to the VPC CIDR or to web-sg on port 80</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="security-group-card">
+                        <h3><i class="fas fa-server"></i> Web Server Security Group (web-sg)</h3>
+                        <ul>
+                            <li><strong>Inbound Rules:</strong>
+                                <ul>
+                                    <li>Allow SSH (port 22) from your IP address for administration</li>
+                                    <li>Allow HTTP (port 80) from the alb-sg (only the ALB can talk to the web servers)</li>
+                                </ul>
+                            </li>
+                            <li><strong>Outbound Rules:</strong> Allow all outbound traffic (to download packages, talk to RDS)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="security-group-card">
+                        <h3><i class="fas fa-database"></i> Database Security Group (db-sg)</h3>
+                        <ul>
+                            <li><strong>Inbound Rules:</strong> Allow MySQL/Aurora (port 3306) from the web-sg (only web servers can talk to the database)</li>
+                            <li><strong>Outbound Rules:</strong> None typically needed</li>
+                        </ul>
+                    </div>
+                    
+                    <h2>Security Best Practices</h2>
+                    <p>We followed these security best practices in our configuration:</p>
+                    
+                    <div class="best-practices">
+                        <div class="practice">
+                            <i class="fas fa-lock"></i>
+                            <h3>Principle of Least Privilege</h3>
+                            <p>Each security group only allows the minimum required access for components to function properly.</p>
+                        </div>
+                        
+                        <div class="practice">
+                            <i class="fas fa-network-wired"></i>
+                            <h3>Layered Security</h3>
+                            <p>We implemented security at multiple levels: network ACLs, security groups, and instance-level firewalls.</p>
+                        </div>
+                        
+                        <div class="practice">
+                            <i class="fas fa-user-shield"></i>
+                            <h3>SSH Access Restriction</h3>
+                            <p>SSH access is limited to specific IP addresses for administrative purposes only.</p>
+                        </div>
+                    </div>
+                    
+                    <h2>Implementation Details</h2>
+                    <p>Security groups were created using the AWS Management Console with the following configurations:</p>
+                    
+                    <h3>Creating Security Groups</h3>
+                    <pre><code># Example AWS CLI commands to create security groups
+# Create ALB Security Group
+aws ec2 create-security-group \
+    --group-name alb-sg \
+    --description "Security group for Application Load Balancer" \
+    --vpc-id vpc-12345678
+
+# Create Web Server Security Group
+aws ec2 create-security-group \
+    --group-name web-sg \
+    --description "Security group for Web Servers" \
+    --vpc-id vpc-12345678
+
+# Create Database Security Group
+aws ec2 create-security-group \
+    --group-name db-sg \
+    --description "Security group for Database" \
+    --vpc-id vpc-12345678
+</code></pre>
+                    
+                    <h3>Adding Inbound Rules</h3>
+                    <pre><code># Add inbound rule to ALB Security Group
+aws ec2 authorize-security-group-ingress \
+    --group-id sg-alb123 \
+    --protocol tcp \
+    --port 80 \
+    --cidr 0.0.0.0/0
+
+# Add inbound rule to Web Security Group for ALB traffic
+aws ec2 authorize-security-group-ingress \
+    --group-id sg-web123 \
+    --protocol tcp \
+    --port 80 \
+    --source-group sg-alb123
+
+# Add inbound rule to Database Security Group for Web Servers
+aws ec2 authorize-security-group-ingress \
+    --group-id sg-db123 \
+    --protocol tcp \
+    --port 3306 \
+    --source-group sg-web123
+</code></pre>
+                    
+                    <div class="conclusion">
+                        <h2>Summary</h2>
+                        <p>Proper security group configuration is essential for protecting your AWS resources. By implementing the principle of least privilege and creating specific security groups for each component, we've established a secure foundation for our WordPress architecture. The ALB security group allows public internet traffic, the web server security group restricts access to only the ALB, and the database security group only allows connections from the web servers.</p>
+                    </div>
+                    
+                    <div class="navigation">
+                        <a href="phase1-network.html" class="btn-primary">&larr; Previous: Phase 1 - Network Foundation</a>
+                        <a href="phase3-database.html" class="btn-primary">Next: Phase 3 - Database Tier &rarr;</a>
+                    </div>
+                </article>
+            </main>
+            
+            <!-- Sidebar -->
+            <div data-include="../components/sidebar.html"></div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div data-include="../components/footer.html"></div>
+
+    <script>
+        // Function to include HTML components
+        document.addEventListener('DOMContentLoaded', function() {
+            var includes = document.querySelectorAll('[data-include]');
+            includes.forEach(function(include) {
+                var file = include.getAttribute('data-include');
+                fetch(file)
+                    .then(response => response.text())
+                    .then(data => {
+                        include.outerHTML = data;
+                    });
+            });
+        });
+    </script>
+</body>
+</html>
