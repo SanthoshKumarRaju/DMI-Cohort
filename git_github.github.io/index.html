@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git & GitHub: The Complete Guide</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fab fa-git-alt"></i>
+                <span>Git Mastery</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#intro" class="nav-link">Introduction</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#history" class="nav-link">History</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#commands" class="nav-link">Commands</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#scenario" class="nav-link">Real Scenario</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#workflow" class="nav-link">Workflow</a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Master Git & GitHub</h1>
+            <p>The complete guide to version control and collaboration for DevOps engineers</p>
+            <button class="cta-button" onclick="scrollToSection('intro')">Start Learning</button>
+        </div>
+    </section>
+
+    <!-- Introduction Section -->
+    <section id="intro" class="section">
+        <div class="container">
+            <h2 class="section-title">What are Git and GitHub?</h2>
+            <div class="intro-content">
+                <div class="intro-text">
+                    <p><strong>Git</strong> is a distributed version control system that allows developers to track changes in their code, collaborate with others, and manage project versions efficiently.</p>
+                    <p><strong>GitHub</strong> is a web-based platform that provides hosting for software development version control using Git. It offers all of Git's distributed version control and source code management functionality, along with its own features.</p>
+                    <div class="feature-grid">
+                        <div class="feature">
+                            <i class="fas fa-code-branch"></i>
+                            <h3>Version Control</h3>
+                            <p>Track and manage changes to your code over time</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-users"></i>
+                            <h3>Collaboration</h3>
+                            <p>Work together with other developers seamlessly</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-shield-alt"></i>
+                            <h3>Backup & Recovery</h3>
+                            <p>Never lose your work and easily revert changes</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="intro-image">
+                    <img src="images/version-control.png" alt="Version Control Illustration">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- History Section -->
+    <section id="history" class="section dark">
+        <div class="container">
+            <h2 class="section-title">History of Git</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">2005</div>
+                    <div class="timeline-content">
+                        <h3>Creation of Git</h3>
+                        <p>Git was created by Linus Torvalds, the creator of Linux, for development of the Linux kernel. It was designed to replace the proprietary version control system called BitKeeper.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2008</div>
+                    <div class="timeline-content">
+                        <h3>GitHub Founded</h3>
+                        <p>GitHub was founded by Tom Preston-Werner, Chris Wanstrath, and PJ Hyett. It provided a web-based Git repository hosting service with a graphical interface.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2018</div>
+                    <div class="timeline-content">
+                        <h3>Microsoft Acquisition</h3>
+                        <p>Microsoft acquired GitHub for $7.5 billion, but committed to keeping it as an independent platform.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">Today</div>
+                    <div class="timeline-content">
+                        <h3>Industry Standard</h3>
+                        <p>Git has become the de facto standard for version control, with GitHub hosting over 100 million repositories.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Use Git Section -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Why DevOps Engineers Need Git</h2>
+            <div class="reasons">
+                <div class="reason-card">
+                    <div class="reason-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>Infrastructure as Code</h3>
+                    <p>Manage and version control your infrastructure code alongside application code</p>
+                </div>
+                <div class="reason-card">
+                    <div class="reason-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3>CI/CD Integration</h3>
+                    <p>Seamlessly integrate with CI/CD pipelines for automated testing and deployment</p>
+                </div>
+                <div class="reason-card">
+                    <div class="reason-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <h3>Change Tracking</h3>
+                    <p>Track every change to configuration files and scripts with full history</p>
+                </div>
+                <div class="reason-card">
+                    <div class="reason-icon">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <h3>Collaboration</h3>
+                    <p>Work effectively with development teams using the same tools and workflows</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Git Commands Section -->
+    <section id="commands" class="section dark">
+        <div class="container">
+            <h2 class="section-title">Essential Git Commands</h2>
+            <div class="command-categories">
+                <div class="category-buttons">
+                    <button class="category-btn active" data-category="basic">Basic</button>
+                    <button class="category-btn" data-category="branching">Branching</button>
+                    <button class="category-btn" data-category="remote">Remote</button>
+                    <button class="category-btn" data-category="advanced">Advanced</button>
+                </div>
+                
+                <div class="commands-list">
+                    <!-- Basic Commands -->
+                    <div class="command-category active" id="basic-category">
+                        <div class="command-item">
+                            <div class="command-header">
+                                <h3>git init</h3>
+                                <span class="copy-btn" onclick="copyCommand('git init')"><i class="far fa-copy"></i></span>
+                            </div>
+                            <p>Initializes a new Git repository in the current directory.</p>
+                            <pre><code>$ git init</code></pre>
+                        </div>
+                        
+                        <div class="command-item">
+                            <div class="command-header">
+                                <h3>git clone</h3>
+                                <span class="copy-btn" onclick="copyCommand('git clone https://github.com/user/repo.git')"><i class="far fa-copy"></i></span>
+                            </div>
+                            <p>Creates a copy of an existing repository in a new directory.</p>
+                            <pre><code>$ git clone https://github.com/user/repo.git</code></pre>
+                        </div>
+                        
+                        <div class="command-item">
+                            <div class="command-header">
+                                <h3>git add</h3>
+                                <span class="copy-btn" onclick="copyCommand('git add filename')"><i class="far fa-copy"></i></span>
+                            </div>
+                            <p>Adds file changes to the staging area.</p>
+                            <pre><code>$ git add filename      # Add specific file
+$ git add .            # Add all changes</code></pre>
+                        </div>
+                        
+                        <div class="command-item">
+                            <div class="command-header">
+                                <h3>git commit</h3>
+                                <span class="copy-btn" onclick="copyCommand('git commit -m "Commit message"')"><i class="far fa-copy"></i></span>
+                            </div>
+                            <p>Records changes to the repository with a descriptive message.</p>
+                            <pre><code>$ git commit -m "Commit message"</code></pre>
+                        </div>
+                        
+                        <div class="command-item">
+                            <div class="command-header">
+                                <h3>git status</h3>
+                                <span class="copy-btn" onclick="copyCommand('git status')"><i class="far fa-copy"></i></span>
+                            </div>
+                            <p>Shows the working tree status and staged changes.</p>
+                            <pre><code>$ git status</code></pre>
+                        </div>
+                    </div>
+                    
+                    <!-- Branching Commands -->
+                    <div class="command-category" id="branching-category">
+                        <div class="command-item">
+                            <div class="command-header">
+                                <h3>git branch</h3>
+                                <span class="copy-btn" onclick="copyCommand('git branch new-feature')"><i class="far fa-copy"></i></span>
+                            </div>
+                            <p>Lists, creates, or deletes branches.</p>
+                            <pre><code>$ git branch                 # List branches
+$ git branch new-feature    # Create new branch
+$ git branch -d branch-name # Delete branch</code></pre>
+                        </div>
+                        
+                        <div class="command-item">
+                            <div class="command-header">
+                                <h3>git checkout</h3>
+                                <span class="copy-btn" onclick="copyCommand('git checkout branch-name')"><i class="far fa-copy"></i></span>
+                            </div>
+                            <p>Switches branches or restores working tree files.</p>
+                            <pre><code>$ git checkout branch-name    # Switch to branch
+$ git checkout -b new-branch # Create and switch to new branch</code></pre>
+                        </div>
+                        
+                        <div class="command-item">
+                            <div class="command-header">
+                                <h3>git merge</h3>
+                                <span class="copy-btn" onclick="copyCommand('git merge branch-name')"><i class="far fa-copy"></i></span>
+                            </div>
+                            <p>Joins two or more development histories together.</p>
+                            <pre><code>$ git merge branch-name</code></pre>
+                        </div>
+                    </div>
+                    
+                    <!-- Remote Commands -->
+                    <div class="command-category" id="remote-category">
+                        <div class="command-item">
+                            <div class="command-header">
+                                <h3>git remote</h3>
+                                <span class="copy-btn" onclick="copyCommand('git remote add origin https://github.com/user/repo.git')"><i class="far fa-copy"></i></span>
+                            </div>
+                            <p>Manages set of tracked repositories.</p>
+                            <pre><code>$ git remote -v                         # List remotes
+$ git remote add origin https://github.com/user/repo.git</code></pre>
+                        </div>
+                        
+                        <div class="command-item">
+                            <div class="command-header">
+                                <h3>git push</h3>
+                                <span class="copy-btn" onclick="copyCommand('git push origin main')"><i class="far fa-copy"></i></span>
+                            </div>
+                            <p>Updates remote refs along with associated objects.</p>
+                            <pre><code>$ git push origin main</code></pre>
+                        </div>
+                        
+                        <div class="command-item">
+                            <div class="command-header">
+                                <h3>git pull</h3>
+                                <span class="copy-btn" onclick="copyCommand('git pull origin main')"><i class="far fa-copy"></i></span>
+                            </div>
+                            <p>Fetches from and integrates with another repository.</p>
+                            <pre><code>$ git pull origin main</code></pre>
+                        </div>
+                    </div>
+                    
+                    <!-- Advanced Commands -->
+                    <div class="command-category" id="advanced-category">
+                        <div class="command-item">
+                            <div class="command-header">
+                                <h3>git stash</h3>
+                                <span class="copy-btn" onclick="copyCommand('git stash')"><i class="far fa-copy"></i></span>
+                            </div>
+                            <p>Temporarily shelves changes so you can work on something else.</p>
+                            <pre><code>$ git stash          # Stash changes
+$ git stash pop      # Reapply stashed changes</code></pre>
+                        </div>
+                        
+                        <div class="command-item">
+                            <div class="command-header">
+                                <h3>git rebase</h3>
+                                <span class="copy-btn" onclick="copyCommand('git rebase main')"><i class="far fa-copy"></i></span>
+                            </div>
+                            <p>Reapplies commits on top of another base tip.</p>
+                            <pre><code>$ git rebase main</code></pre>
+                        </div>
+                        
+                        <div class="command-item">
+                            <div class="command-header">
+                                <h3>git cherry-pick</h3>
+                                <span class="copy-btn" onclick="copyCommand('git cherry-pick commit-hash')"><i class="far fa-copy"></i></span>
+                            </div>
+                            <p>Applies the changes introduced by some existing commits.</p>
+                            <pre><code>$ git cherry-pick commit-hash</code></pre>
+                        </div>
+                        
+                        <div class="command-item">
+                            <div class="command-header">
+                                <h3>git log</h3>
+                                <span class="copy-btn" onclick="copyCommand('git log --oneline --graph')"><i class="far fa-copy"></i></span>
+                            </div>
+                            <p>Shows commit logs with various options for filtering and formatting.</p>
+                            <pre><code>$ git log
+$ git log --oneline --graph  # Compact view with branch visualization</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Real Scenario Section -->
+    <section id="scenario" class="section">
+        <div class="container">
+            <h2 class="section-title">Real-World Scenario: Location Tracking Application</h2>
+            <p class="scenario-description">Let's explore how Git and GitHub would be used in developing a location tracking application that finds where users are using their devices.</p>
+            
+            <div class="scenario-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Project Initialization</h3>
+                        <p>Initialize a Git repository for the location tracking application:</p>
+                        <pre><code>$ mkdir location-tracker
+$ cd location-tracker
+$ git init
+$ git add .
+$ git commit -m "Initial commit: Location tracker project structure"</code></pre>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Create GitHub Repository</h3>
+                        <p>Create a remote repository on GitHub and connect it to your local repo:</p>
+                        <pre><code>$ git remote add origin https://github.com/yourusername/location-tracker.git
+$ git branch -M main
+$ git push -u origin main</code></pre>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Feature Branch Workflow</h3>
+                        <p>Create separate branches for different features to enable parallel development:</p>
+                        <pre><code>$ git checkout -b feature/gps-integration
+# Develop GPS integration functionality
+$ git add .
+$ git commit -m "Implement GPS location tracking"
+$ git push origin feature/gps-integration</code></pre>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Code Review and Merge</h3>
+                        <p>Create a Pull Request on GitHub for code review before merging to main branch:</p>
+                        <pre><code>$ git checkout main
+$ git pull origin main
+$ git merge feature/gps-integration
+$ git push origin main</code></pre>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h3>Handling Bugs</h3>
+                        <p>When users report location accuracy issues, create a hotfix branch:</p>
+                        <pre><code>$ git checkout -b hotfix/location-accuracy
+# Fix the accuracy algorithm
+$ git add .
+$ git commit -m "Improve location accuracy algorithm"
+$ git push origin hotfix/location-accuracy</code></pre>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="benefits">
+                <h3>How Git/GitHub Helps This Project:</h3>
+                <ul>
+                    <li><strong>Version History:</strong> Track every change to the location algorithms</li>
+                    <li><strong>Collaboration:</strong> Multiple developers can work on different features simultaneously</li>
+                    <li><strong>Code Reviews:</strong> Ensure quality through pull requests before merging</li>
+                    <li><strong>Issue Tracking:</strong> Use GitHub Issues to track bugs and feature requests from users</li>
+                    <li><strong>CI/CD Integration:</strong> Automate testing and deployment when changes are pushed</li>
+                    <li><strong>Rollback Capability:</strong> Easily revert if a location tracking update causes issues</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- DevOps Workflow Section -->
+    <section id="workflow" class="section dark">
+        <div class="container">
+            <h2 class="section-title">Git in DevOps Workflow</h2>
+            <div class="workflow-content">
+                <div class="workflow-image">
+                    <img src="images/devops-workflow.png" alt="DevOps Workflow with Git">
+                </div>
+                <div class="workflow-steps">
+                    <div class="workflow-step">
+                        <div class="step-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div class="step-details">
+                            <h3>1. Code</h3>
+                            <p>Developers write code and commit changes to feature branches</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-icon">
+                            <i class="fas fa-share-alt"></i>
+                        </div>
+                        <div class="step-details">
+                            <h3>2. Push</h3>
+                            <p>Push changes to GitHub repository</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-icon">
+                            <i class="fas fa-code-compare"></i>
+                        </div>
+                        <div class="step-details">
+                            <h3>3. Pull Request</h3>
+                            <p>Create pull requests for code review and discussion</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div class="step-details">
+                            <h3>4. Build & Test</h3>
+                            <p>CI/CD pipelines automatically build and test the application</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-icon">
+                            <i class="fas fa-check-double"></i>
+                        </div>
+                        <div class="step-details">
+                            <h3>5. Deploy</h3>
+                            <p>After successful testing, deploy to production environment</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-icon">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <div class="step-details">
+                            <h3>6. Monitor & Iterate</h3>
+                            <p>Monitor application performance and iterate based on feedback</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Git Mastery</h3>
+                    <p>Master version control with Git and GitHub to streamline your development workflow.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#intro">Introduction</a></li>
+                        <li><a href="#history">History</a></li>
+                        <li><a href="#commands">Commands</a></li>
+                        <li><a href="#scenario">Real Scenario</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="https://git-scm.com/doc">Official Git Documentation</a></li>
+                        <li><a href="https://docs.github.com/">GitHub Docs</a></li>
+                        <li><a href="https://www.atlassian.com/git">Atlassian Git Tutorials</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Git Mastery Blog. Part of DevOps Cohort by Praveen Mishra Week 2.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="scripts/script.js"></script>
+</body>
+</html>
