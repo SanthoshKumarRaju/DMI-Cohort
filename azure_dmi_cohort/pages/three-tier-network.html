@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three-Tier Network Architecture - Azure Projects</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/components/header.css">
+    <link rel="stylesheet" href="../styles/components/buttons.css">
+    <link rel="stylesheet" href="../styles/components/cards.css">
+    <link rel="stylesheet" href="../styles/pages/project-detail.css">
+    <link rel="stylesheet" href="../styles/pages/responsive.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <a href="../index.html" style="color: inherit; text-decoration: none;">
+                        <i class="fab fa-microsoft"></i>
+                        <span>Azure Projects</span>
+                    </a>
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="../index.html#home" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="../index.html#projects" class="nav-link">Projects</a></li>
+                    <li class="nav-item"><a href="../index.html#about" class="nav-link">About</a></li>
+                    <li class="nav-item"><a href="../index.html#contact" class="nav-link">Contact</a></li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="project-detail">
+        <div class="project-header">
+            <div class="project-header-content">
+                <div class="project-meta">
+                    <span class="project-difficulty advanced">Advanced</span>
+                    <span class="project-duration"><i class="fas fa-clock"></i> 4 hours</span>
+                </div>
+                <h1 class="project-title">Three-Tier Network Architecture</h1>
+                <p class="project-description">Design secure network with load balancer, subnets, and network security groups</p>
+            </div>
+        </div>
+
+        <div class="project-content">
+            <div class="project-main">
+                <section class="project-section">
+                    <h2><i class="fas fa-info-circle"></i> Architecture Overview</h2>
+                    <div class="detail-card">
+                        <p>This project implements a secure three-tier network architecture on Azure with proper segmentation and load balancing:</p>
+                        
+                        <div class="architecture-diagram">
+                            <h4>Network Architecture</h4>
+                            <div class="diagram-container" id="networkDiagram">
+                                <!-- Web Tier -->
+                                <div class="diagram-tier web" style="top: 20%; left: 20%;">
+                                    <div class="tier-icon"><i class="fas fa-globe"></i></div>
+                                    <div class="tier-name">Web Tier</div>
+                                    <div class="tier-desc">web-subnet</div>
+                                    <div class="tier-ip">10.0.1.0/24</div>
+                                </div>
+                                
+                                <!-- App Tier -->
+                                <div class="diagram-tier app" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                    <div class="tier-icon"><i class="fas fa-server"></i></div>
+                                    <div class="tier-name">App Tier</div>
+                                    <div class="tier-desc">app-subnet</div>
+                                    <div class="tier-ip">10.0.2.0/25</div>
+                                </div>
+                                
+                                <!-- DB Tier -->
+                                <div class="diagram-tier db" style="top: 20%; right: 20%;">
+                                    <div class="tier-icon"><i class="fas fa-database"></i></div>
+                                    <div class="tier-name">DB Tier</div>
+                                    <div class="tier-desc">db-subnet</div>
+                                    <div class="tier-ip">10.0.3.0/26</div>
+                                </div>
+                                
+                                <!-- Load Balancer -->
+                                <div class="diagram-tier lb" style="top: 10%; left: 50%; transform: translateX(-50%);">
+                                    <div class="tier-icon"><i class="fas fa-balance-scale"></i></div>
+                                    <div class="tier-name">Load Balancer</div>
+                                    <div class="tier-desc">web-public-elb</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="project-section">
+                    <h2><i class="fas fa-list-check"></i> Implementation Steps</h2>
+                    <div class="implementation-steps">
+                        
+                        <div class="step">
+                            <div class="step-header">
+                                <div class="step-number">1</div>
+                                <h3 class="step-title">Create Resource Group</h3>
+                            </div>
+                            <div class="step-content">
+                                <div class="code-block">
+                                    <span class="keyword">Name:</span> vnet-demo-rg<br>
+                                    <span class="keyword">Region:</span> Central India<br>
+                                    <span class="keyword">Purpose:</span> Three-tier network demo
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header">
+                                <div class="step-number">2</div>
+                                <h3 class="step-title">Create Virtual Network</h3>
+                            </div>
+                            <div class="step-content">
+                                <p>Set up the main virtual network with appropriate CIDR range:</p>
+                                <div class="code-block">
+                                    <span class="keyword">Name:</span> eb-demo-vnet<br>
+                                    <span class="keyword">CIDR:</span> 10.0.0.0/16<br>
+                                    <span class="keyword">Subnets:</span><br>
+                                    &nbsp;&nbsp;- web-subnet: 10.0.1.0/24<br>
+                                    &nbsp;&nbsp;- app-subnet: 10.0.2.0/25<br>
+                                    &nbsp;&nbsp;- db-subnet: 10.0.3.0/26<br>
+                                    &nbsp;&nbsp;- AzureBastionSubnet: 10.0.4.0/26
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header">
+                                <div class="step-number">3</div>
+                                <h3 class="step-title">Create Web Tier VM</h3>
+                            </div>
+                            <div class="step-content">
+                                <p>Deploy Ubuntu VM in the web subnet:</p>
+                                <div class="code-block">
+                                    <span class="keyword">VM Name:</span> web-nginx<br>
+                                    <span class="keyword">Image:</span> Ubuntu 22.04 LTS<br>
+                                    <span class="keyword">Subnet:</span> web-subnet<br>
+                                    <span class="keyword">Public IP:</span> Enabled<br>
+                                    <span class="keyword">Inbound Ports:</span> SSH (22), HTTP (80)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header">
+                                <div class="step-number">4</div>
+                                <h3 class="step-title">Install & Configure NGINX</h3>
+                            </div>
+                            <div class="step-content">
+                                <p>Connect to the VM and install NGINX web server:</p>
+                                <div class="code-block">
+                                    <span class="comment"># Connect to VM</span><br>
+                                    ssh username@<span class="string">&lt;public-ip&gt;</span><br>
+                                    <br>
+                                    <span class="comment"># Install NGINX</span><br>
+                                    sudo apt update<br>
+                                    sudo apt install -y nginx<br>
+                                    sudo systemctl enable nginx<br>
+                                    sudo systemctl start nginx
+                                </div>
+                                <p>Verify installation by visiting: <code>http://&lt;VM_PUBLIC_IP&gt;/</code></p>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header">
+                                <div class="step-number">5</div>
+                                <h3 class="step-title">Create Public Load Balancer</h3>
+                            </div>
+                            <div class="step-content">
+                                <p>Configure a public load balancer for high availability:</p>
+                                <div class="code-block">
+                                    <span class="keyword">Name:</span> web-public-elb<br>
+                                    <span class="keyword">Type:</span> Public<br>
+                                    <span class="keyword">SKU:</span> Standard<br>
+                                    <span class="keyword">Frontend IP:</span> web-elb-ip (new public IP)<br>
+                                    <span class="keyword">Backend Pool:</span> web-backend-pool<br>
+                                    <span class="keyword">Health Probe:</span> TCP port 80<br>
+                                    <span class="keyword">Load Balancing Rule:</span> TCP 80 → 80
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header">
+                                <div class="step-number">6</div>
+                                <h3 class="step-title">Configure Network Security Groups</h3>
+                            </div>
+                            <div class="step-content">
+                                <p>Set up NSGs for each subnet with appropriate rules:</p>
+                                
+                                <h4>Web Subnet NSG</h4>
+                                <div class="code-block">
+                                    <span class="comment"># Inbound Rules</span><br>
+                                    Allow HTTP (80) - Source: Internet<br>
+                                    Allow SSH (22) - Source: YourIP<br>
+                                    Deny all other inbound
+                                </div>
+                                
+                                <h4>App Subnet NSG</h4>
+                                <div class="code-block">
+                                    <span class="comment"># Inbound Rules</span><br>
+                                    Allow All - Source: web-subnet<br>
+                                    Deny internet direct access
+                                </div>
+                                
+                                <h4>DB Subnet NSG</h4>
+                                <div class="code-block">
+                                    <span class="comment"># Inbound Rules</span><br>
+                                    Allow MySQL (3306) - Source: app-subnet<br>
+                                    Deny all other access
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header">
+                                <div class="step-number">7</div>
+                                <h3 class="step-title">Test the Architecture</h3>
+                            </div>
+                            <div class="step-content">
+                                <p>Verify the complete setup by accessing the application through the load balancer:</p>
+                                <div class="code-block">
+                                    <span class="comment"># Test URL</span><br>
+                                    http://4.240.104.251/
+                                </div>
+                                <p>You should see the NGINX default page served through the load balancer.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <section class="project-section">
+                    <h2><i class="fas fa-video"></i> Video Demonstration</h2>
+                    <div class="video-demo">
+                        <p>Complete architecture deployment walkthrough:</p>
+                        <div class="video-container">
+                            <video controls poster="../assets/images/screenshots/load-balancer.png">
+                                <source src="../assets/videos/Design-a-Three-Tier-Network-with-Load-Balancer-on-Azure.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="project-section">
+                    <h2><i class="fas fa-shield-alt"></i> Security Considerations</h2>
+                    <div class="detail-card">
+                        <h4>Network Segmentation</h4>
+                        <ul>
+                            <li>Each tier in separate subnet with specific CIDR ranges</li>
+                            <li>Proper route tables for inter-tier communication</li>
+                            <li>Network Security Groups for traffic control</li>
+                        </ul>
+                        
+                        <h4>Access Control</h4>
+                        <ul>
+                            <li>Web tier accessible from internet on port 80/443 only</li>
+                            <li>App tier accessible only from web tier</li>
+                            <li>DB tier accessible only from app tier</li>
+                            <li>SSH restricted to specific IP ranges</li>
+                        </ul>
+                    </div>
+                </section>
+
+            </div>
+
+            <div class="project-sidebar">
+                <div class="resource-links">
+                    <h3><i class="fas fa-network-wired"></i> Network Resources</h3>
+                    <ul class="resource-list">
+                        <li class="resource-item">
+                            <a href="https://docs.microsoft.com/azure/virtual-network" target="_blank" class="resource-link">
+                                <i class="fas fa-external-link-alt"></i>
+                                <span>Azure VNet Docs</span>
+                            </a>
+                        </li>
+                        <li class="resource-item">
+                            <a href="https://docs.microsoft.com/azure/load-balancer" target="_blank" class="resource-link">
+                                <i class="fas fa-external-link-alt"></i>
+                                <span>Load Balancer Docs</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="tech-stack">
+                    <h3><i class="fas fa-layer-group"></i> Architecture Components</h3>
+                    <div class="tech-categories">
+                        <div class="tech-category">
+                            <h4><i class="fas fa-cloud"></i> Networking</h4>
+                            <div class="tech-tags">
+                                <span class="tech-tag">Virtual Network</span>
+                                <span class="tech-tag">Load Balancer</span>
+                                <span class="tech-tag">NSG</span>
+                                <span class="tech-tag">Subnets</span>
+                            </div>
+                        </div>
+                        <div class="tech-category">
+                            <h4><i class="fas fa-server"></i> Compute</h4>
+                            <div class="tech-tags">
+                                <span class="tech-tag">Ubuntu VM</span>
+                                <span class="tech-tag">NGINX</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h3><i class="fas fa-sitemap"></i> Subnet Details</h3>
+                    <div class="subnet-info">
+                        <div class="subnet-item">
+                            <strong>web-subnet</strong><br>
+                            <small>10.0.1.0/24 - Web Tier</small>
+                        </div>
+                        <div class="subnet-item">
+                            <strong>app-subnet</strong><br>
+                            <small>10.0.2.0/25 - App Tier</small>
+                        </div>
+                        <div class="subnet-item">
+                            <strong>db-subnet</strong><br>
+                            <small>10.0.3.0/26 - DB Tier</small>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="project-navigation">
+                <a href="react-app-deployment.html" class="nav-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <div class="btn-text">
+                        <span class="btn-label">Previous Project</span>
+                        <span class="btn-project">React App</span>
+                    </div>
+                </a>
+                <a href="static-website.html" class="nav-btn next">
+                    <div class="btn-text">
+                        <span class="btn-label">Next Project</span>
+                        <span class="btn-project">Static Website</span>
+                    </div>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script src="../scripts/main.js"></script>
+    <script src="../scripts/components/navigation.js"></script>
+    <script src="../scripts/components/animations.js"></script>
+    <script src="../scripts/components/video-player.js"></script>
+    <script src="../scripts/pages/three-tier-network.js"></script>
+</body>
+</html>

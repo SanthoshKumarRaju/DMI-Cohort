@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Static Website on Azure Storage - Azure Projects</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/components/header.css">
+    <link rel="stylesheet" href="../styles/components/buttons.css">
+    <link rel="stylesheet" href="../styles/components/cards.css">
+    <link rel="stylesheet" href="../styles/pages/project-detail.css">
+    <link rel="stylesheet" href="../styles/pages/responsive.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <a href="../index.html" style="color: inherit; text-decoration: none;">
+                        <i class="fab fa-microsoft"></i>
+                        <span>Azure Projects</span>
+                    </a>
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="../index.html#home" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="../index.html#projects" class="nav-link">Projects</a></li>
+                    <li class="nav-item"><a href="../index.html#about" class="nav-link">About</a></li>
+                    <li class="nav-item"><a href="../index.html#contact" class="nav-link">Contact</a></li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="project-detail">
+        <div class="project-header">
+            <div class="project-header-content">
+                <div class="project-meta">
+                    <span class="project-difficulty intermediate">Intermediate</span>
+                    <span class="project-duration"><i class="fas fa-clock"></i> 1 hour</span>
+                </div>
+                <h1 class="project-title">Static Website on Azure Storage</h1>
+                <p class="project-description">Host cost-effective static websites using Azure Blob Storage with custom domain</p>
+            </div>
+        </div>
+
+        <div class="project-content">
+            <div class="project-main">
+                <section class="project-section">
+                    <h2><i class="fas fa-info-circle"></i> Project Overview</h2>
+                    <div class="detail-card">
+                        <p>Azure Storage static website hosting provides a serverless, cost-effective solution for hosting static content like HTML, CSS, JavaScript, and image files.</p>
+                        
+                        <div class="architecture-diagram">
+                            <h4>Static Website Architecture</h4>
+                            <div class="diagram-container">
+                                <div class="diagram-tier" style="top: 30%; left: 20%;">
+                                    <div class="tier-icon"><i class="fas fa-file-code"></i></div>
+                                    <div class="tier-name">HTML/CSS/JS</div>
+                                    <div class="tier-desc">Static Files</div>
+                                </div>
+                                <div class="diagram-tier" style="top: 30%; left: 50%; transform: translateX(-50%);">
+                                    <div class="tier-icon"><i class="fas fa-database"></i></div>
+                                    <div class="tier-name">Blob Storage</div>
+                                    <div class="tier-desc">$web Container</div>
+                                </div>
+                                <div class="diagram-tier" style="top: 30%; right: 20%;">
+                                    <div class="tier-icon"><i class="fas fa-globe"></i></div>
+                                    <div class="tier-name">CDN</div>
+                                    <div class="tier-desc">Global Delivery</div>
+                                </div>
+                                <div class="diagram-tier" style="top: 70%; left: 50%; transform: translateX(-50%);">
+                                    <div class="tier-icon"><i class="fas fa-users"></i></div>
+                                    <div class="tier-name">End Users</div>
+                                    <div class="tier-desc">Worldwide Access</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="project-section">
+                    <h2><i class="fas fa-list-check"></i> Implementation Steps</h2>
+                    <div class="implementation-steps">
+                        
+                        <div class="step">
+                            <div class="step-header">
+                                <div class="step-number">1</div>
+                                <h3 class="step-title">Create Resource Group</h3>
+                            </div>
+                            <div class="step-content">
+                                <div class="code-block">
+                                    <span class="keyword">Name:</span> static-web-hosting<br>
+                                    <span class="keyword">Region:</span> Your preferred region<br>
+                                    <span class="keyword">Purpose:</span> Static website hosting resources
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header">
+                                <div class="step-number">2</div>
+                                <h3 class="step-title">Create Storage Account</h3>
+                            </div>
+                            <div class="step-content">
+                                <p>Create a new storage account with specific configuration:</p>
+                                <div class="code-block">
+                                    <span class="comment"># Storage Account Configuration</span><br>
+                                    <span class="keyword">Name:</span> staticwebhosting1 (globally unique)<br>
+                                    <span class="keyword">Performance:</span> Standard<br>
+                                    <span class="keyword">Redundancy:</span> LRS (Locally-redundant storage)<br>
+                                    <span class="keyword">Hierarchical namespace:</span> Disabled
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header">
+                                <div class="step-number">3</div>
+                                <h3 class="step-title">Enable Static Website</h3>
+                            </div>
+                            <div class="step-content">
+                                <p>Enable static website hosting in the storage account:</p>
+                                <div class="code-block">
+                                    <span class="comment"># Navigation in Azure Portal</span><br>
+                                    Storage Account → Data management → Static website<br>
+                                    <br>
+                                    <span class="comment"># Configuration</span><br>
+                                    Static website: Enabled<br>
+                                    Index document name: index.html<br>
+                                    Error document path: 404.html
+                                </div>
+                                <p>This automatically creates a <code>$web</code> container for your files.</p>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header">
+                                <div class="step-number">4</div>
+                                <h3 class="step-title">Prepare Website Files</h3>
+                            </div>
+                            <div class="step-content">
+                                <p>Clone and customize the website repository:</p>
+                                <div class="code-block">
+                                    <span class="comment"># Clone repository (if using existing project)</span><br>
+                                    git clone &lt;your-repository-url&gt;<br>
+                                    cd &lt;project-folder&gt;<br>
+                                    <br>
+                                    <span class="comment"># Customize content</span><br>
+                                    <span class="comment"># Update text, images, and styling as needed</span>
+                                </div>
+                                <p>Ensure you have at least an <code>index.html</code> file.</p>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header">
+                                <div class="step-number">5</div>
+                                <h3 class="step-title">Upload Files to Storage</h3>
+                            </div>
+                            <div class="step-content">
+                                <p>Upload all website files to the <code>$web</code> container:</p>
+                                <div class="code-block">
+                                    <span class="comment"># Using Azure Portal</span><br>
+                                    Storage Account → Containers → $web → Upload<br>
+                                    <br>
+                                    <span class="comment"># Select all files (HTML, CSS, JS, images)</span><br>
+                                    <span class="comment"># Maintain folder structure if any</span>
+                                </div>
+                                <p>Alternatively, use Azure CLI or Azure Storage Explorer for bulk uploads.</p>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header">
+                                <div class="step-number">6</div>
+                                <h3 class="step-title">Access Your Website</h3>
+                            </div>
+                            <div class="step-content">
+                                <p>Your static website is now live! Access it using the provided URL:</p>
+                                <div class="code-block">
+                                    <span class="comment"># Primary endpoint URL format</span><br>
+                                    https://&lt;storage-account-name&gt;.z29.web.core.windows.net/<br>
+                                    <br>
+                                    <span class="comment"># Actual deployed URL</span><br>
+                                    https://staticwebhosting1.z29.web.core.windows.net/
+                                </div>
+                                <div class="success-message">
+                                    <i class="fas fa-check-circle"></i>
+                                    <strong>Website Live:</strong> Your static website is now accessible globally!
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <section class="project-section">
+                    <h2><i class="fas fa-video"></i> Video Demonstration</h2>
+                    <div class="video-demo">
+                        <p>Complete static website deployment process:</p>
+                        <div class="video-container">
+                            <video controls poster="../assets/images/screenshots/static-website.png">
+                                <source src="../assets/videos/Static-Website-on-Azure.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="project-section">
+                    <h2><i class="fas fa-chart-line"></i> Cost Analysis</h2>
+                    <div class="detail-card">
+                        <h4>Pricing Benefits</h4>
+                        <ul>
+                            <li><strong>No VM costs:</strong> Serverless architecture eliminates compute expenses</li>
+                            <li><strong>Pay-per-use storage:</strong> Only pay for actual storage used</li>
+                            <li><strong>Low egress costs:</strong> Data transfer costs are minimal</li>
+                            <li><strong>Free tier:</strong> First 5 GB storage and certain operations free</li>
+                        </ul>
+                        
+                        <h4>Estimated Monthly Cost (Small Website)</h4>
+                        <ul>
+                            <li>Storage: 1 GB ≈ $0.02</li>
+                            <li>Operations: 10,000 reads ≈ $0.04</li>
+                            <li>Data transfer: 10 GB ≈ $0.87</li>
+                            <li><strong>Total: ≈ $0.93/month</strong></li>
+                        </ul>
+                    </div>
+                </section>
+
+            </div>
+
+            <div class="project-sidebar">
+                <div class="resource-links">
+                    <h3><i class="fas fa-link"></i> Live Demo</h3>
+                    <ul class="resource-list">
+                        <li class="resource-item">
+                            <a href="https://staticwebhosting1.z29.web.core.windows.net/" target="_blank" class="resource-link">
+                                <i class="fas fa-external-link-alt"></i>
+                                <span>View Live Website</span>
+                            </a>
+                        </li>
+                        <li class="resource-item">
+                            <a href="https://docs.microsoft.com/azure/storage/blobs/storage-blob-static-website" target="_blank" class="resource-link">
+                                <i class="fas fa-book"></i>
+                                <span>Documentation</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="tech-stack">
+                    <h3><i class="fas fa-layer-group"></i> Technology Stack</h3>
+                    <div class="tech-categories">
+                        <div class="tech-category">
+                            <h4><i class="fas fa-cloud"></i> Azure Services</h4>
+                            <div class="tech-tags">
+                                <span class="tech-tag">Storage Account</span>
+                                <span class="tech-tag">Blob Storage</span>
+                                <span class="tech-tag">Static Websites</span>
+                            </div>
+                        </div>
+                        <div class="tech-category">
+                            <h4><i class="fas fa-code"></i> Web Technologies</h4>
+                            <div class="tech-tags">
+                                <span class="tech-tag">HTML5</span>
+                                <span class="tech-tag">CSS3</span>
+                                <span class="tech-tag">JavaScript</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h3><i class="fas fa-tachometer-alt"></i> Performance</h3>
+                    <div class="performance-metrics">
+                        <div class="metric">
+                            <span class="metric-value">~100ms</span>
+                            <span class="metric-label">First Byte</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-value">99.9%</span>
+                            <span class="metric-label">Uptime SLA</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-value">Global</span>
+                            <span class="metric-label">Availability</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="project-navigation">
+                <a href="three-tier-network.html" class="nav-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <div class="btn-text">
+                        <span class="btn-label">Previous Project</span>
+                        <span class="btn-project">Three-Tier Network</span>
+                    </div>
+                </a>
+                <a href="epicbook-deployment.html" class="nav-btn next">
+                    <div class="btn-text">
+                        <span class="btn-label">Next Project</span>
+                        <span class="btn-project">EpicBook App</span>
+                    </div>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script src="../scripts/main.js"></script>
+    <script src="../scripts/components/navigation.js"></script>
+    <script src="../scripts/components/animations.js"></script>
+    <script src="../scripts/components/video-player.js"></script>
+</body>
+</html>

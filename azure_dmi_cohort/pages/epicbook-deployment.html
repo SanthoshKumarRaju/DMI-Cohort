@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EpicBook Full-Stack Deployment - Azure Projects</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/components/header.css">
+    <link rel="stylesheet" href="../styles/components/buttons.css">
+    <link rel="stylesheet" href="../styles/components/cards.css">
+    <link rel="stylesheet" href="../styles/pages/project-detail.css">
+    <link rel="stylesheet" href="../styles/pages/responsive.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <a href="../index.html" style="color: inherit; text-decoration: none;">
+                        <i class="fab fa-microsoft"></i>
+                        <span>Azure Projects</span>
+                    </a>
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="../index.html#home" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="../index.html#projects" class="nav-link">Projects</a></li>
+                    <li class="nav-item"><a href="../index.html#about" class="nav-link">About</a></li>
+                    <li class="nav-item"><a href="../index.html#contact" class="nav-link">Contact</a></li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="project-detail">
+        <div class="project-header">
+            <div class="project-header-content">
+                <div class="project-meta">
+                    <span class="project-difficulty advanced">Advanced</span>
+                    <span class="project-duration"><i class="fas fa-clock"></i> 6 hours</span>
+                </div>
+                <h1 class="project-title">EpicBook Full-Stack Deployment</h1>
+                <p class="project-description">Full-stack application with Azure VM frontend and MySQL database backend</p>
+            </div>
+        </div>
+
+        <div class="project-content">
+            <div class="project-main">
+                <section class="project-section">
+                    <h2><i class="fas fa-info-circle"></i> Architecture Overview</h2>
+                    <div class="detail-card">
+                        <p>EpicBook is a full-stack web application deployed on Azure with a multi-tier architecture featuring private network integration and secure database access.</p>
+                        
+                        <div class="architecture-diagram">
+                            <h4>Application Architecture</h4>
+                            <div class="diagram-container">
+                                <!-- Web Tier -->
+                                <div class="diagram-tier web" style="top: 15%; left: 20%;">
+                                    <div class="tier-icon"><i class="fas fa-laptop-code"></i></div>
+                                    <div class="tier-name">Frontend VM</div>
+                                    <div class="tier-desc">epicbook-vm</div>
+                                    <div class="tier-ip">Public Subnet</div>
+                                </div>
+                                
+                                <!-- App Tier -->
+                                <div class="diagram-tier app" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                    <div class="tier-icon"><i class="fab fa-node-js"></i></div>
+                                    <div class="tier-name">Node.js App</div>
+                                    <div class="tier-desc">Express Server</div>
+                                </div>
+                                
+                                <!-- DB Tier -->
+                                <div class="diagram-tier db" style="top: 15%; right: 20%;">
+                                    <div class="tier-icon"><i class="fas fa-database"></i></div>
+                                    <div class="tier-name">MySQL DB</div>
+                                    <div class="tier-desc">Private Subnet</div>
+                                </div>
+                                
+                                <!-- Nginx -->
+                                <div class="diagram-tier" style="top: 40%; left: 20%;">
+                                    <div class="tier-icon"><i class="fas fa-server"></i></div>
+                                    <div class="tier-name">Nginx</div>
+                                    <div class="tier-desc">Reverse Proxy</div>
+                                </div>
+                                
+                                <!-- Users -->
+                                <div class="diagram-tier" style="bottom: 15%; left: 50%; transform: translateX(-50%);">
+                                    <div class="tier-icon"><i class="fas fa-users"></i></div>
+                                    <div class="tier-name">End Users</div>
+                                    <div class="tier-desc">HTTP Access</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="project-section">
+                    <h2><i class="fas fa-list-check"></i> Implementation Steps</h2>
+                    <div class="implementation-steps">
+                        
+                        <div class="step">
+                            <div class="step-header">
+                                <div class="step-number">1</div>
+                                <h3 class="step-title">Create Resource Group & VNet</h3>
+                            </div>
+                            <div class="step-content">
+                                <p>Set up the foundational networking infrastructure:</p>
+                                <div class="code-block">
+                                    <span class="keyword">Resource Group:</span> EpicBook-RG<br>
+                                    <span class="keyword">VNet:</span> epic-vnet (10.0.0.0/16)<br>
+                                    <span class="keyword">Subnets:</span><br>
+                                    &nbsp;&nbsp;- public-subnet: 10.0.1.0/24 (VM)<br>
+                                    &nbsp;&nbsp;- mysql-subnet: 10.0.2.0/24 (MySQL)<br>
+                                    <span class="keyword">NSGs:</span> nsg-public, nsg-mysql
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header">
+                                <div class="step-number">2</div>
+                                <h3 class="step-title">Provision Azure VM</h3>
+                            </div>
+                            <div class="step-content">
+                                <p>Deploy the frontend virtual machine:</p>
+                                <div class="code-block">
+                                    <span class="keyword">VM Name:</span> epicbook-vm<br>
+                                    <span class="keyword">Image:</span> Ubuntu 22.04 LTS<br>
+                                    <span class="keyword">Size:</span> Standard_B1s<br>
+                                    <span class="keyword">Subnet:</span> public-subnet<br>
+                                    <span class="keyword">Ports:</span> SSH (22), HTTP (80)<br>
+                                    <span class="keyword">Authentication:</span> SSH Key
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header">
+                                <div class="step-number">3</div>
+                                <h3 class="step-title">Install Required Software</h3>
+                            </div>
+                            <div class="step-content">
+                                <p>Connect to VM and install necessary packages:</p>
+                                <div class="code-block">
+                                    <span class="comment"># Update system and install packages</span><br>
+                                    ssh azureuser@<span class="string">&lt;VM_PUBLIC_IP&gt;</span><br>
+                                    sudo apt update && sudo apt upgrade -y<br>
+                                    sudo apt install -y nginx git mysql-client<br>
+                                    <br>
+                                    <span class="comment"># Install Node.js LTS</span><br>
+                                    curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -<br>
+                                    sudo apt install -y nodejs<br>
+                                    <br>
+                                    <span class="comment"># Verify installations</span><br>
+                                    node -v && npm -v
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header">
+                                <div class="step-number">4</div>
+                                <h3 class="step-title">Clone & Setup Application</h3>
+                            </div>
+                            <div class="step-content">
+                                <p>Download and prepare the EpicBook application:</p>
+                                <div class="code-block">
+                                    <span class="comment"># Clone repository</span><br>
+                                    sudo apt install -y git<br>
+                                    git clone https://github.com/pravinmishraaws/theepicbook.git<br>
+                                    cd theepicbook<br>
+                                    <br>
+                                    <span class="comment"># Install Node.js dependencies</span><br>
+                                    npm install
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header">
+                                <div class="step-number">5</div>
+                                <h3 class="step-title">Create Azure Database for MySQL</h3>
+                            </div>
+                            <div class="step-content">
+                                <p>Set up MySQL Flexible Server with private access:</p>
+                                <div class="code-block">
+                                    <span class="keyword">Server Type:</span> Flexible Server<br>
+                                    <span class="keyword">Access:</span> Private access (VNet Integration)<br>
+                                    <span class="keyword">Subnet:</span> mysql-subnet<br>
+                                    <span class="keyword">Admin:</span> admin_s<br>
+                                    <span class="keyword">Database:</span> epicbook<br>
+                                    <span class="keyword">Tier:</span> Burstable B1S
+                                </div>
+                                <p>Azure automatically creates private DNS: <code>privatelink.mysql.database.azure.com</code></p>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header">
+                                <div class="step-number">6</div>
+                                <h3 class="step-title">Configure Database & Import Data</h3>
+                            </div>
+                            <div class="step-content">
+                                <p>Create database schema and import initial data:</p>
+                                <div class="code-block">
+                                    <span class="comment"># Set environment variables</span><br>
+                                    export MYSQL_HOST="admin.mysql.database.azure.com"<br>
+                                    export MYSQL_USER="admin_s"<br>
+                                    export MYSQL_DB="epicbook"<br>
+                                    <br>
+                                    <span class="comment"># Create database and import schema</span><br>
+                                    mysql -h $MYSQL_HOST -u $MYSQL_USER -p -e "CREATE DATABASE epicbook;"<br>
+                                    <br>
+                                    <span class="comment"># Prepare and import SQL files</span><br>
+                                    sed -i 's/`bookstore`\.//g' db/*.sql<br>
+                                    mysql -h $MYSQL_HOST -u $MYSQL_USER -p $MYSQL_DB < db/BuyTheBook_Schema.sql<br>
+                                    mysql -h $MYSQL_HOST -u $MYSQL_USER -p $MYSQL_DB < db/author_seed.sql<br>
+                                    mysql -h $MYSQL_HOST -u $MYSQL_USER -p $MYSQL_DB < db/books_seed.sql
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header">
+                                <div class="step-number">7</div>
+                                <h3 class="step-title">Configure Application Database Connection</h3>
+                            </div>
+                            <div class="step-content">
+                                <p>Update the application configuration with database credentials:</p>
+                                <div class="code-block">
+                                    <span class="comment"># Edit config.json file</span><br>
+                                    nano config.json<br>
+                                    <br>
+                                    <span class="comment"># Configuration content:</span><br>
+                                    {<br>
+                                    &nbsp;&nbsp;"development": {<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;"username": "admin_s",<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;"password": "Santhosh@1999",<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;"database": "epicbook",<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;"host": "admin.mysql.database.azure.com",<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;"dialect": "mysql",<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;"dialectOptions": {<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ssl": {<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"rejectUnauthorized": true<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                                    &nbsp;&nbsp;}<br>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header">
+                                <div class="step-number">8</div>
+                                <h3 class="step-title">Configure Nginx Reverse Proxy</h3>
+                            </div>
+                            <div class="step-content">
+                                <p>Set up Nginx to proxy requests to the Node.js application:</p>
+                                <div class="code-block">
+                                    <span class="comment"># Create Nginx configuration</span><br>
+                                    sudo nano /etc/nginx/conf.d/theepicbooks.conf<br>
+                                    <br>
+                                    <span class="comment"># Configuration content:</span><br>
+                                    server {<br>
+                                    &nbsp;&nbsp;listen 80;<br>
+                                    &nbsp;&nbsp;server_name 20.244.0.224;<br>
+                                    <br>
+                                    &nbsp;&nbsp;location / {<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;proxy_pass http://localhost:8080;<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;proxy_http_version 1.1;<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;proxy_set_header Upgrade $http_upgrade;<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;proxy_set_header Connection 'upgrade';<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;proxy_set_header Host $host;<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;proxy_cache_bypass $http_upgrade;<br>
+                                    &nbsp;&nbsp;}<br>
+                                    }
+                                </div>
+                                <div class="code-block">
+                                    <span class="comment"># Test and restart Nginx</span><br>
+                                    sudo nginx -t<br>
+                                    sudo systemctl restart nginx
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header">
+                                <div class="step-number">9</div>
+                                <h3 class="step-title">Start Application & Test</h3>
+                            </div>
+                            <div class="step-content">
+                                <p>Launch the application and verify everything works:</p>
+                                <div class="code-block">
+                                    <span class="comment"># Navigate to application directory</span><br>
+                                    cd epicbook<br>
+                                    <br>
+                                    <span class="comment"># Start the Node.js application</span><br>
+                                    node server.js<br>
+                                    <br>
+                                    <span class="comment"># Access the application</span><br>
+                                    http://20.244.0.224/
+                                </div>
+                                <div class="success-message">
+                                    <i class="fas fa-check-circle"></i>
+                                    <strong>Application Live:</strong> EpicBook is now running successfully!
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <section class="project-section">
+                    <h2><i class="fas fa-video"></i> Video Demonstration</h2>
+                    <div class="video-demo">
+                        <p>Complete EpicBook deployment walkthrough:</p>
+                        <div class="video-container">
+                            <video controls poster="../assets/images/screenshots/epicbook-app.png">
+                                <source src="../assets/videos/EpicBook_Azure&Azure_Database.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="project-section">
+                    <h2><i class="fas fa-shield-alt"></i> Security Implementation</h2>
+                    <div class="detail-card">
+                        <h4>Network Security</h4>
+                        <ul>
+                            <li><strong>VNet Segmentation:</strong> Public and private subnets</li>
+                            <li><strong>NSG Rules:</strong> Restricted port access</li>
+                            <li><strong>Private Database:</strong> MySQL in private subnet</li>
+                            <li><strong>SSL Encryption:</strong> Database connection security</li>
+                        </ul>
+                        
+                        <h4>Access Control</h4>
+                        <ul>
+                            <li>SSH access restricted to specific IP ranges</li>
+                            <li>Database private endpoint access only</li>
+                            <li>Application behind reverse proxy</li>
+                            <li>Environment variables for sensitive data</li>
+                        </ul>
+                    </div>
+                </section>
+
+            </div>
+
+            <div class="project-sidebar">
+                <div class="resource-links">
+                    <h3><i class="fas fa-code-branch"></i> Application Resources</h3>
+                    <ul class="resource-list">
+                        <li class="resource-item">
+                            <a href="http://20.244.0.224/" target="_blank" class="resource-link">
+                                <i class="fas fa-external-link-alt"></i>
+                                <span>Live Application</span>
+                            </a>
+                        </li>
+                        <li class="resource-item">
+                            <a href="https://github.com/pravinmishraaws/theepicbook" target="_blank" class="resource-link">
+                                <i class="fab fa-github"></i>
+                                <span>Source Code</span>
+                            </a>
+                        </li>
+                        <li class="resource-item">
+                            <a href="https://docs.microsoft.com/azure/mysql" target="_blank" class="resource-link">
+                                <i class="fas fa-book"></i>
+                                <span>Azure MySQL Docs</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="tech-stack">
+                    <h3><i class="fas fa-layer-group"></i> Full Tech Stack</h3>
+                    <div class="tech-categories">
+                        <div class="tech-category">
+                            <h4><i class="fas fa-cloud"></i> Azure Services</h4>
+                            <div class="tech-tags">
+                                <span class="tech-tag">Virtual Machine</span>
+                                <span class="tech-tag">MySQL Flexible</span>
+                                <span class="tech-tag">VNet</span>
+                                <span class="tech-tag">NSG</span>
+                            </div>
+                        </div>
+                        <div class="tech-category">
+                            <h4><i class="fas fa-server"></i> Backend</h4>
+                            <div class="tech-tags">
+                                <span class="tech-tag">Node.js</span>
+                                <span class="tech-tag">Express</span>
+                                <span class="tech-tag">MySQL</span>
+                                <span class="tech-tag">Nginx</span>
+                            </div>
+                        </div>
+                        <div class="tech-category">
+                            <h4><i class="fas fa-code"></i> Frontend</h4>
+                            <div class="tech-tags">
+                                <span class="tech-tag">HTML/CSS</span>
+                                <span class="tech-tag">JavaScript</span>
+                                <span class="tech-tag">EJS Templates</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h3><i class="fas fa-database"></i> Database Schema</h3>
+                    <div class="schema-info">
+                        <div class="schema-item">
+                            <strong>Database:</strong> epicbook
+                        </div>
+                        <div class="schema-item">
+                            <strong>Tables:</strong> authors, books
+                        </div>
+                        <div class="schema-item">
+                            <strong>Records:</strong> 50+ book entries
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="project-navigation">
+                <a href="static-website.html" class="nav-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <div class="btn-text">
+                        <span class="btn-label">Previous Project</span>
+                        <span class="btn-project">Static Website</span>
+                    </div>
+                </a>
+                <a href="../index.html" class="nav-btn next">
+                    <div class="btn-text">
+                        <span class="btn-label">Back to</span>
+                        <span class="btn-project">All Projects</span>
+                    </div>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script src="../scripts/main.js"></script>
+    <script src="../scripts/components/navigation.js"></script>
+    <script src="../scripts/components/animations.js"></script>
+    <script src="../scripts/components/video-player.js"></script>
+</body>
+</html>
