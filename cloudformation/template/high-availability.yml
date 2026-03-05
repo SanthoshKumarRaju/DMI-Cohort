@@ -1,0 +1,120 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  CloudFormation template for AutoScaling + ALB using custom AMI epicbook (ami-0c7f8a395918fd37f)
+
+Parameters:
+  KeyName:
+    Type: String
+    Default: personal-aws
+    Description: EC2 KeyPair name (must already exist)
+
+  VPC:
+    Type: AWS::EC2::VPC::Id
+    Description: Existing VPC Id
+
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet::Id
+    Description: First public subnet Id
+
+  PublicSubnet2:
+    Type: AWS::EC2::Subnet::Id
+    Description: Second public subnet Id
+
+  WebServerSG:
+    Type: AWS::EC2::SecurityGroup::Id
+    Description: Security Group for web servers
+
+  ALBSG:
+    Type: AWS::EC2::SecurityGroup::Id
+    Description: Security Group for ALB
+
+Resources:
+
+  ################################################
+  # Launch Template
+  ################################################
+  LaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateName: epicbooks
+      LaunchTemplateData:
+        ImageId: ami-0c7f8a395918fd37f   # epicbook AMI
+        InstanceType: t2.micro
+        KeyName: !Ref KeyName
+        SecurityGroupIds:
+          - !Ref WebServerSG
+        BlockDeviceMappings:
+          - DeviceName: /dev/xvda
+            Ebs:
+              VolumeSize: 8
+              VolumeType: gp2
+              DeleteOnTermination: true
+        UserData:
+          Fn::Base64: !Sub |
+            #!/bin/bash
+            yum update -y
+            systemctl restart httpd || true
+        TagSpecifications:
+          - ResourceType: instance
+            Tags:
+              - Key: Name
+                Value: epicbook
+
+  ################################################
+  # Auto Scaling + ALB + TargetGroup
+  ################################################
+  TargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      VpcId: !Ref VPC
+      Protocol: HTTP
+      Port: 80
+      TargetType: instance
+      HealthCheckPath: /
+
+  ALB:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: epic-reads-alb
+      Subnets:
+        - !Ref PublicSubnet1
+        - !Ref PublicSubnet2
+      SecurityGroups:
+        - !Ref ALBSG
+      Scheme: internet-facing
+      Type: application
+
+  ALBListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref ALB
+      Port: 80
+      Protocol: HTTP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref TargetGroup
+
+  AutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: epic-reads
+      VPCZoneIdentifier:
+        - !Ref PublicSubnet1
+        - !Ref PublicSubnet2
+      MinSize: "1"
+      MaxSize: "2"
+      DesiredCapacity: "2"
+      LaunchTemplate:
+        LaunchTemplateId: !Ref LaunchTemplate
+        Version: !GetAtt LaunchTemplate.LatestVersionNumber
+      TargetGroupARNs:
+        - !Ref TargetGroup
+      Tags:
+        - Key: Name
+          Value: epic-reads
+          PropagateAtLaunch: true
+
+Outputs:
+  ALBDNS:
+    Value: !GetAtt ALB.DNSName
+    Description: Access your app here

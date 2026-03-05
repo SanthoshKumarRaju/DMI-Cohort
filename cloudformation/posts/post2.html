@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordPress on AWS: Connecting to RDS - Blog Post</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        .post-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 100px 20px 50px;
+        }
+        
+        .post-header {
+            margin-bottom: 40px;
+        }
+        
+        .post-title {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .post-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            color: var(--gray);
+        }
+        
+        .post-tags {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .tag {
+            background: var(--light);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .post-body h2 {
+            margin: 40px 0 20px;
+            color: var(--dark);
+        }
+        
+        .post-body h3 {
+            margin: 30px 0 15px;
+            color: var(--primary);
+        }
+        
+        .post-body p {
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        
+        .post-body ul, .post-body ol {
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .post-body li {
+            margin-bottom: 10px;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: var(--font-code);
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 40px;
+            font-weight: 500;
+        }
+        
+        .step {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>AWS Architecture Blog</h1>
+                <p>Cloud Infrastructure & Deployment</p>
+            </div>
+            <nav class="navbar">
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../index.html#about">About</a></li>
+                    <li><a href="../index.html#posts">Posts</a></li>
+                    <li><a href="../index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="post-content">
+        <div class="post-header">
+            <h1 class="post-title">WordPress on AWS: Connecting to RDS</h1>
+            <div class="post-meta">
+                <span>Published: september 25, 2025</span>
+                <span>Author: Santhosh</span>
+                <span>Reading Time: 10 min</span>
+            </div>
+            <div class="post-tags">
+                <span class="tag">WordPress</span>
+                <span class="tag">RDS</span>
+                <span class="tag">MySQL</span>
+                <span class="tag">Web Application</span>
+            </div>
+        </div>
+        
+        <div class="post-body">
+            <h2>Introduction</h2>
+            <p>In this follow-up to our CloudFormation 2-tier architecture post, we'll deploy WordPress and connect it to the RDS MySQL database we created. This demonstrates how to use the infrastructure for a real-world application.</p>
+            
+            <p>WordPress is a perfect candidate for this architecture as it requires a web server (Apache/Nginx) and a database (MySQL), aligning perfectly with our 2-tier design.</p>
+            
+            <h2>Prerequisites</h2>
+            <p>Before we begin, ensure you have:</p>
+            <ul>
+                <li>The 2-tier infrastructure deployed from our previous post</li>
+                <li>SSH access to your EC2 instances</li>
+                <li>The RDS endpoint and database credentials</li>
+                <li>Basic familiarity with WordPress installation</li>
+            </ul>
+            
+            <h2>Step-by-Step Guide</h2>
+            
+            <div class="step">
+                <h3><span class="step-number">1</span> Prepare the EC2 Instance</h3>
+                <p>SSH into one of your EC2 instances and install the necessary packages for WordPress:</p>
+                
+                <div class="code-block">
+# Connect to your EC2 instance
+ssh -i personal-aws.pem ec2-user@&lt;EC2-PUBLIC-IP&gt;
+
+# Install PHP and MySQL client
+sudo yum update -y
+sudo yum install -y php php-mysqlnd php-json php-gd php-mbstring
+
+# Restart Apache to load PHP module
+sudo systemctl restart httpd
+                </div>
+            </div>
+            
+            <div class="step">
+                <h3><span class="step-number">2</span> Download and Configure WordPress</h3>
+                <p>Download the latest WordPress version and set up the configuration:</p>
+                
+                <div class="code-block">
+# Navigate to web root
+cd /var/www/html
+
+# Download WordPress
+sudo wget https://wordpress.org/latest.tar.gz
+
+# Extract WordPress
+sudo tar -xzf latest.tar.gz
+
+# Move WordPress files to web root
+sudo mv wordpress/* .
+sudo rm -rf wordpress latest.tar.gz
+
+# Set proper permissions
+sudo chown -R apache:apache /var/www/html
+sudo chmod -R 755 /var/www/html
+                </div>
+                
+                <p>Create the WordPress configuration file:</p>
+                
+                <div class="code-block">
+# Copy the sample configuration file
+sudo cp wp-config-sample.php wp-config.php
+
+# Edit the configuration with your RDS details
+sudo nano wp-config.php
+                </div>
+                
+                <p>Update the database configuration section with your RDS details:</p>
+                
+                <div class="code-block">
+// ** Database settings - You can get this info from your RDS console ** //
+define( 'DB_NAME', 'stabderd' );
+define( 'DB_USER', 'admin' );
+define( 'DB_PASSWORD', 'santhosh' );
+define( 'DB_HOST', '&lt;your-rds-endpoint&gt;:3306' );
+define( 'DB_CHARSET', 'utf8' );
+define( 'DB_COLLATE', '' );
+                </div>
+            </div>
+            
+            <div class="step">
+                <h3><span class="step-number">3</span> Test Database Connection</h3>
+                <p>Verify that your EC2 instance can connect to the RDS database:</p>
+                
+                <div class="code-block">
+# Test MySQL connection from EC2
+mysql -h &lt;rds-endpoint&gt; -u admin -p
+
+# Enter your password when prompted
+# If connected successfully, you'll see the MySQL prompt
+                </div>
+                
+                <p>Create the WordPress database if it doesn't exist (though our CloudFormation template should have created it):</p>
+                
+                <div class="code-block">
+# Create database (if needed)
+CREATE DATABASE IF NOT EXISTS stabderd;
+EXIT;
+                </div>
+            </div>
+            
+            <div class="step">
+                <h3><span class="step-number">4</span> Complete WordPress Installation</h3>
+                <p>Access your WordPress site through the ALB DNS name:</p>
+                
+                <div class="code-block">
+# Get your ALB DNS name from CloudFormation outputs
+# It will look something like: epic-reads-alb-123456789.ap-south-1.elb.amazonaws.com
+                </div>
+                
+                <p>Open your web browser and navigate to your ALB DNS name. You should see the WordPress installation screen. Follow the prompts to complete the installation.</p>
+            </div>
+            
+            <div class="step">
+                <h3><span class="step-number">5</span> Update Launch Template for WordPress</h3>
+                <p>To ensure new instances automatically have WordPress installed, update your Launch Template user data:</p>
+                
+                <div class="code-block">
+#!/bin/bash
+yum update -y
+yum install -y httpd php php-mysqlnd
+systemctl start httpd
+systemctl enable httpd
+
+# Download and extract WordPress
+cd /var/www/html
+wget https://wordpress.org/latest.tar.gz
+tar -xzf latest.tar.gz
+mv wordpress/* .
+rm -rf wordpress latest.tar.gz
+
+# Set permissions
+chown -R apache:apache /var/www/html
+chmod -R 755 /var/www/html
+
+# Note: wp-config.php should be created separately or pulled from S3
+                </div>
+            </div>
+            
+            <h2>Advanced Configuration</h2>
+            
+            <h3>Using Amazon S3 for Media Storage</h3>
+            <p>To offload media files from your EC2 instances, configure WordPress to use Amazon S3:</p>
+            
+            <ol>
+                <li>Create an S3 bucket for media storage</li>
+                <li>Install and configure the WP Offload Media plugin</li>
+                <li>Set up IAM roles for EC2 instances to access S3</li>
+            </ol>
+            
+            <h3>Implementing Caching</h3>
+            <p>Improve WordPress performance with caching solutions:</p>
+            
+            <ul>
+                <li><strong>Object Caching:</strong> Use Amazon ElastiCache (Redis/Memcached)</li>
+                <li><strong>Page Caching:</strong> Implement Varnish or use a plugin like W3 Total Cache</li>
+                <li><strong>CDN:</strong> Configure Amazon CloudFront for global content delivery</li>
+            </ul>
+            
+            <h3>Automating Backups</h3>
+            <p>Set up automated backups for your WordPress site:</p>
+            
+            <div class="code-block">
+# Example backup script
+#!/bin/bash
+# Backup WordPress files
+tar -czf /tmp/wordpress-backup-$(date +%Y%m%d).tar.gz /var/www/html
+
+# Backup database
+mysqldump -h &lt;rds-endpoint&gt; -u admin -p stabderd > /tmp/db-backup-$(date +%Y%m%d).sql
+
+# Upload to S3
+aws s3 cp /tmp/wordpress-backup-$(date +%Y%m%d).tar.gz s3://my-backup-bucket/
+aws s3 cp /tmp/db-backup-$(date +%Y%m%d).sql s3://my-backup-bucket/
+            </div>
+            
+            <h2>Troubleshooting Common Issues</h2>
+            
+            <h3>Database Connection Errors</h3>
+            <p>If WordPress cannot connect to the database:</p>
+            <ul>
+                <li>Verify the RDS endpoint is correct in wp-config.php</li>
+                <li>Check that the security group allows MySQL traffic from EC2 instances</li>
+                <li>Ensure the database exists and credentials are correct</li>
+            </ul>
+            
+            <h3>File Permission Issues</h3>
+            <p>If WordPress cannot write files:</p>
+            <div class="code-block">
+# Set correct ownership and permissions
+sudo chown -R apache:apache /var/www/html
+sudo find /var/www/html -type d -exec chmod 755 {} \;
+sudo find /var/www/html -type f -exec chmod 644 {} \;
+            </div>
+            
+            <h2>Conclusion</h2>
+            <p>By deploying WordPress on our 2-tier AWS architecture, we've created a scalable, secure hosting environment that can handle traffic fluctuations through auto scaling and distribute load efficiently with the ALB.</p>
+            
+            <p>This setup provides a solid foundation for a production WordPress site, with the database securely isolated in private subnets and the web tier able to scale based on demand.</p>
+            
+            <p>For even better performance and security, consider adding CloudFront, WAF, and implementing a proper CI/CD pipeline for updates.</p>
+            
+            <a href="../index.html" class="back-link">← Back to Home</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>AWS Architecture Blog</h3>
+                    <p>Documenting cloud infrastructure implementations and best practices.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <ul>
+                        <li><a href="#">GitHub</a></li>
+                        <li><a href="#">LinkedIn</a></li>
+                        <li><a href="#">Twitter</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">AWS Documentation</a></li>
+                        <li><a href="#">CloudFormation Guide</a></li>
+                        <li><a href="#">Templates Repository</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 SanthoshKumarRaju. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

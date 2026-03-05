@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS CloudFormation Blog - 2-Tier Architecture</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>AWS Architecture Blog</h1>
+                <p>Cloud Infrastructure & Deployment</p>
+            </div>
+            <nav class="navbar">
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#posts">Posts</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>AWS CloudFormation: 2-Tier Architecture</h1>
+                <p>Learn how to deploy a complete web application infrastructure with auto-scaling, load balancing, and database isolation</p>
+                <a href="#posts" class="btn">Read Posts</a>
+            </div>
+            <div class="hero-image">
+                <div class="architecture-diagram">
+                    <div class="tier tier-1">ALB</div>
+                    <div class="tier tier-2">EC2 Auto Scaling</div>
+                    <div class="tier tier-3">RDS MySQL</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="container">
+            <h2>About This Project</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>This blog documents the implementation of a production-ready 2-tier web architecture on AWS using Infrastructure as Code (CloudFormation). The architecture follows AWS best practices for security, scalability, and high availability.</p>
+                    <ul>
+                        <li>VPC with public and private subnets</li>
+                        <li>Application Load Balancer with Auto Scaling</li>
+                        <li>RDS MySQL database in private subnets</li>
+                        <li>Security groups for network isolation</li>
+                        <li>Custom AMI with Apache web server</li>
+                    </ul>
+                </div>
+                <div class="about-stats">
+                    <div class="stat">
+                        <h3>2</h3>
+                        <p>Availability Zones</p>
+                    </div>
+                    <div class="stat">
+                        <h3>4</h3>
+                        <p>Subnets</p>
+                    </div>
+                    <div class="stat">
+                        <h3>3</h3>
+                        <p>Security Groups</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="posts" class="posts">
+        <div class="container">
+            <h2>Blog Posts</h2>
+            <div class="posts-grid">
+                <article class="post-card">
+                    <div class="post-card-header">
+                        <span class="post-date">september 25, 2025</span>
+                        <span class="post-category">CloudFormation</span>
+                    </div>
+                    <h3><a href="posts/post1.html">AWS CloudFormation 2-Tier Architecture</a></h3>
+                    <p>Complete guide to deploying a 2-tier architecture with VPC, ALB, Auto Scaling, and RDS MySQL using CloudFormation templates.</p>
+                    <a href="posts/post1.html" class="read-more">Read More →</a>
+                </article>
+                
+                <article class="post-card">
+                    <div class="post-card-header">
+                        <span class="post-date">september 25, 2025</span>
+                        <span class="post-category">WordPress</span>
+                    </div>
+                    <h3><a href="posts/post2.html">WordPress on AWS: Connecting to RDS</a></h3>
+                    <p>Step-by-step tutorial on deploying WordPress and connecting it to the RDS MySQL database in the private subnet.</p>
+                    <a href="posts/post2.html" class="read-more">Read More →</a>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact" class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>AWS Architecture Blog</h3>
+                    <p>Documenting cloud infrastructure implementations and best practices.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <ul>
+                        <li><a href="https://github.com/SanthoshKumarRaju/cloudformation" target="_blank">GitHub</a></li>
+                        <li><a href="https://www.linkedin.com/in/santhosh-kumar-raju-dasararaju-5905a81b3/" target="_balnk">LinkedIn</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">AWS Documentation</a></li>
+                        <li><a href="#">CloudFormation Guide</a></li>
+                        <li><a href="#">Templates Repository</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 santhosh kumar raju. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
