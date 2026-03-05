@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DevOps Journey • Linux + Nginx Blog</title>
+  <meta name="description" content="My 12-week DevOps journey—hands-on with Linux commands, Nginx deployments, and real-world notes." />
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+  <link rel="preload" href="assets/css/style.css" as="style" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="/">
+        <span class="logo" aria-hidden="true">⬢</span>
+        <span class="brand-text">DevOps Journey</span>
+      </a>
+      <nav class="nav">
+        <a href="#about">About</a>
+        <a href="#posts">Posts</a>
+        <a href="https://linkedin.com/in/santhosh-kumar-raju-dasararaju-5905a81b3" target="_blank" rel="noopener">LinkedIn</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap hero-inner">
+        <div class="hero-copy">
+          <h1>🚀 Week-1: Linux &amp; Nginx in Action</h1>
+          <p>From basic Linux commands to serving a static React app on Nginx—here’s how I’m building foundations for DevOps excellence.</p>
+          <div class="hero-cta">
+            <a class="btn primary" href="posts/week-1-linux-basics.html">Read the deep-dive</a>
+            <a class="btn ghost" href="#posts">Browse posts</a>
+          </div>
+          <ul class="meta">
+            <li>Ubuntu • Nginx • React</li>
+            <li>Hands-on • Explanations • Practical checks</li>
+          </ul>
+        </div>
+        <div class="hero-card">
+          <div class="glass">
+            <h3 class="chip">Command Spotlight</h3>
+            <div class="cmd">
+              <span class="prompt">$</span><code>sudo netstat -tulnp</code>
+            </div>
+            <p class="muted">List open ports &amp; listeners—debug fast when services don’t respond.</p>
+            <div class="divider"></div>
+            <div class="cmd">
+              <span class="prompt">$</span><code>ps aux | grep nginx</code>
+            </div>
+            <p class="muted">Confirm Nginx processes &amp; PIDs in seconds.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="section">
+      <div class="wrap">
+        <h2>Why I’m learning in public</h2>
+        <p>Accountability, collaboration, and clarity. Sharing weekly steps helps me internalize concepts and inspire others to start.</p>
+        <div class="pill-row">
+          <span class="pill">Learn by doing</span>
+          <span class="pill">Explain simply</span>
+          <span class="pill">Ship weekly</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="posts" class="section">
+      <div class="wrap">
+        <h2>Latest Posts</h2>
+        <div class="grid">
+          <article class="card">
+            <div class="card-badge">Week-1</div>
+            <h3><a href="posts/week-1-linux-basics.html">Linux Basics + Nginx Deployment (Ubuntu)</a></h3>
+            <p class="muted">ifconfig, ping, netstat, dig/host, ps, pstree, kill, uname, uptime, free, df—and hosting a React app on Nginx.</p>
+            <a class="btn inline" href="posts/week-1-linux-basics.html">Read post →</a>
+          </article>
+          <!-- Add more post cards as you publish -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <p>© <span id="year"></span> DevOps Journey • Built for GitHub Pages</p>
+      <div class="dot-sep">
+        <a href="/">Home</a>
+        <a href="#posts">Posts</a>
+        <a href="mailto:you@example.com">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // tiny nicety: current year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Week-1 • Linux Basics + Nginx Deployment</title>
+  <meta name="description" content="Detailed guide: foundational Linux commands with explanations, and deploying a static React app using Nginx on Ubuntu." />
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body>
+  <header class="site-header sub">
+    <div class="wrap">
+      <a class="brand" href="../">
+        <span class="logo" aria-hidden="true">⬢</span>
+        <span class="brand-text">DevOps Journey</span>
+      </a>
+      <nav class="nav">
+        <a href="../#posts">Posts</a>
+        <a href="https://linkedin.com/in/santhosh-kumar-raju-dasararaju-5905a81b3" target="_blank" rel="noopener">LinkedIn</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <article class="post wrap">
+      <header class="post-header">
+        <p class="eyebrow">Week-1</p>
+        <h1>Linux Basics + Nginx Deployment (Ubuntu)</h1>
+        <p class="muted">Hands-on commands with detailed explanations + deploying a React app on Nginx.</p>
+        <div class="tag-row">
+          <span class="pill">Linux</span>
+          <span class="pill">Nginx</span>
+          <span class="pill">React</span>
+          <span class="pill">Ubuntu</span>
+        </div>
+      </header>
+
+      <section class="toc">
+        <h2>Contents</h2>
+        <ol>
+          <li><a href="#basic-commands">Basic Linux Commands</a></li>
+          <li><a href="#essential-commands">Essential System Commands</a></li>
+          <li><a href="#nginx-deploy">Deploying Nginx + React App</a></li>
+          <li><a href="#checks">Health &amp; Verification Checks</a></li>
+          <li><a href="#takeaways">Key Takeaways</a></li>
+        </ol>
+      </section>
+
+      <!-- Basic Commands -->
+      <section id="basic-commands" class="post-section">
+        <h2>1) Basic Linux Commands</h2>
+
+        <div class="cmd-card"><h3>👤 whoami</h3><p>Displays the username of the current user. Helpful when working on servers with multiple accounts or when switching between root and normal users.</p><pre><code>$ whoami</code></pre></div>
+
+        <div class="cmd-card"><h3>📂 pwd</h3><p>Prints the current working directory. Useful for confirming where you are in the file system before running commands that affect files or directories.</p><pre><code>$ pwd</code></pre></div>
+
+        <div class="cmd-card"><h3>📄 ls</h3><p>Lists files and directories in the current folder. Options like <code>-l</code> provide details (permissions, owner, size, modification date) and <code>-a</code> shows hidden files (those starting with a dot).</p><pre><code>$ ls -la</code></pre></div>
+
+        <div class="cmd-card"><h3>📂 cd</h3><p>Changes your working directory. <code>cd ..</code> moves you up one directory, while <code>cd ~</code> takes you to your home directory.</p><pre><code>$ cd /var/www</code></pre></div>
+
+        <div class="cmd-card"><h3>📑 cat</h3><p>Concatenates and prints the contents of a file to the terminal. Great for quickly viewing configuration files or logs.</p><pre><code>$ cat file.txt</code></pre></div>
+
+        <div class="cmd-card"><h3>📝 echo</h3><p>Displays a line of text in the terminal. Can also redirect output into files, making it useful for quickly creating test files or updating configs.</p><pre><code>$ echo "Hello DevOps" &gt; hello.txt</code></pre></div>
+
+        <div class="cmd-card"><h3>📁 mkdir</h3><p>Creates new directories. Combine with <code>-p</code> to create nested directories in one go.</p><pre><code>$ mkdir projects</code></pre></div>
+
+        <div class="cmd-card"><h3>🗑️ rm</h3><p>Removes files or directories. Use with caution! <code>rm -rf</code> forcefully deletes directories and all their contents.</p><pre><code>$ rm -rf testdir</code></pre></div>
+
+        <div class="cmd-card"><h3>📦 cp</h3><p>Copies files and directories. Useful for backups or duplicating configs. Add <code>-r</code> for recursive copy.</p><pre><code>$ cp file1.txt file2.txt</code></pre></div>
+
+        <div class="cmd-card"><h3>🔀 mv</h3><p>Moves or renames files/directories. Handy for organizing files or updating naming conventions.</p><pre><code>$ mv old.txt new.txt</code></pre></div>
+      </section>
+
+      <!-- Essential / Networking Commands -->
+      <section id="essential-commands" class="post-section">
+        <h2>2) Essential System & Networking Commands</h2>
+
+        <div class="cmd-card"><h3>🌐 ifconfig</h3><p>Displays network interfaces, IP addresses, and related information. Useful for checking connectivity issues or confirming server IPs.</p><pre><code>$ ifconfig</code></pre></div>
+
+        <div class="cmd-card"><h3>📡 ping</h3><p>Sends ICMP packets to check if a host is reachable. Also measures latency. Commonly used to debug internet or server reachability.</p><pre><code>$ ping -c 4 thecloudadvisory.com</code></pre></div>
+
+        <div class="cmd-card"><h3>🔒 netstat</h3><p>Lists open ports, active connections, and listening services. Critical for debugging services like web servers or databases. Options like <code>-tulnp</code> show TCP/UDP with program names.</p><pre><code>$ sudo netstat -tulnp</code></pre></div>
+
+        <div class="cmd-card"><h3>🧭 dig / host</h3><p>DNS lookup tools that query domain name servers. Helpful in debugging DNS resolution problems or checking record details like A, MX, or CNAME.</p><pre><code>$ dig pravinmishra.in
+$ host pravinmishra.in</code></pre></div>
+
+        <div class="cmd-card"><h3>🧩 ps</h3><p>Displays running processes. Options like <code>aux</code> give detailed output (owner, CPU%, memory%, command). Often combined with grep to filter specific services like Nginx.</p><pre><code>$ ps -e
+$ ps aux | grep nginx</code></pre></div>
+
+        <div class="cmd-card"><h3>🌲 pstree</h3><p>Shows running processes in a tree structure to better understand parent-child relationships, such as how Nginx workers spawn from the master process.</p><pre><code>$ pstree</code></pre></div>
+
+        <div class="cmd-card"><h3>🛑 kill</h3><p>Terminates processes using their PID. Often combined with <code>ps</code> to locate and stop unresponsive processes.</p><pre><code>$ kill &lt;PID&gt;</code></pre></div>
+
+        <div class="cmd-card"><h3>💽 uname</h3><p>Prints system and kernel details. Useful for quickly identifying the OS, kernel version, or architecture during troubleshooting.</p><pre><code>$ uname -a</code></pre></div>
+
+        <div class="cmd-card"><h3>⏱️ uptime</h3><p>Shows how long the system has been running and the average system load. Helpful to understand server stability and recent restarts.</p><pre><code>$ uptime</code></pre></div>
+
+        <div class="cmd-card"><h3>💡 free</h3><p>Displays memory usage. Flags like <code>-h</code> make it more readable. Useful when diagnosing out-of-memory issues.</p><pre><code>$ free -h</code></pre></div>
+
+        <div class="cmd-card"><h3>🧱 df</h3><p>Shows disk space usage for mounted filesystems. The <code>-h</code> option makes it human-readable. Essential for ensuring there is enough storage for logs and apps.</p><pre><code>$ df -h</code></pre></div>
+      </section>
+
+      <!-- Deployment Section -->
+      <section id="nginx-deploy" class="post-section">
+        <h2>3) Deploying Nginx + Static React App</h2>
+        <ol class="steps">
+          <li><strong>Install Nginx</strong><p>First update apt repos and install the Nginx web server.</p><pre><code>$ sudo apt update
+$ sudo apt install -y nginx</code></pre></li>
+          <li><strong>Build React app</strong><p>Compile your React project into static files using <code>npm run build</code>.</p><pre><code>$ npm run build</code></pre></li>
+          <li><strong>Copy build to web root</strong><p>Move generated build files into the Nginx default web directory.</p><pre><code>$ sudo cp -r build/* /var/www/html/</code></pre></li>
+          <li><strong>Check status & reload</strong><p>Ensure Nginx is running, then reload to serve the new files.</p><pre><code>$ systemctl status nginx
+$ sudo systemctl reload nginx</code></pre></li>
+          <li><strong>Verify</strong><p>Check HTTP response headers with curl.</p><pre><code>$ curl -I http://localhost</code></pre></li>
+        </ol>
+      </section>
+
+      <!-- Health Checks -->
+      <section id="checks" class="post-section">
+        <h2>4) Health &amp; Verification Checks</h2>
+        <ul class="checks">
+          <li><code>ps aux | grep nginx</code> → Verify Nginx processes running.</li>
+          <li><code>sudo netstat -tulnp</code> → Confirm ports are listening.</li>
+          <li><code>tail -f /var/log/nginx/access.log</code> → Monitor incoming requests live.</li>
+          <li><code>df -h</code> / <code>free -h</code> → Confirm sufficient disk and memory.</li>
+        </ul>
+      </section>
+
+      <!-- Takeaways -->
+      <section id="takeaways" class="post-section">
+        <h2>5) Key Takeaways</h2>
+        <ul class="bullets">
+          <li>Mastering basic commands builds a strong Linux foundation.</li>
+          <li>System & network commands are essential for troubleshooting real-world issues.</li>
+          <li>Nginx provides a simple yet powerful way to host static applications.</li>
+        </ul>
+      </section>
+
+      <footer class="post-footer">
+        <p>Part of the <strong>DevOps for Beginners Cohort</strong> by Pravin Mishra.</p>
+        <p class="muted">Have suggestions? Open a PR or drop a comment on LinkedIn.</p>
+      </footer>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <a class="btn inline" href="../">← Back to Home</a>
+      <div class="dot-sep">
+        <a href="../#posts">More posts</a>
+        <a href="mailto:you@example.com">Contact</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
