@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S3 Static Website Hosting | AWS Deployment Guide</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <i class="fab fa-aws"></i>
+                    <span>AWS Deployment Guide</span>
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="s3-hosting.html" class="nav-link active">S3 Hosting</a></li>
+                    <li class="nav-item"><a href="react-deployment.html" class="nav-link">React Deployment</a></li>
+                    <li class="nav-item"><a href="epicbooks-deployment.html" class="nav-link">EpicBooks Deployment</a></li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="guide-container">
+        <div class="guide-header">
+            <h1>Hosting a Static Website on Amazon S3</h1>
+            <p>Step-by-step guide to hosting a static website using Amazon S3</p>
+            <div class="meta-info">
+                <span><i class="fas fa-clock"></i> 15 min read</span>
+                <span><i class="fas fa-difficulty"></i> Beginner</span>
+            </div>
+        </div>
+
+        <div class="guide-content">
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <h2>Create an S3 Bucket</h2>
+                    </div>
+                    <div class="step-content">
+                        <h3>Log into AWS Management Console</h3>
+                        <p>Go to AWS Console and log in to your AWS account.</p>
+                        
+                        <h3>Navigate to S3 Service</h3>
+                        <p>In the AWS Console, type "S3" in the search bar or go to "Services" and select S3 under "Storage."</p>
+                        
+                        <h3>Create a New S3 Bucket</h3>
+                        <ul>
+                            <li>Click on the <strong>Create bucket</strong> button.</li>
+                            <li><strong>Bucket name</strong>: Choose a globally unique name, like <code>dmi-staticwebpage</code>.</li>
+                            <li><strong>Region</strong>: Select a region where you want the S3 bucket to be created (e.g., US East (N. Virginia)).</li>
+                            <li>Leave the other settings as default unless you want to change any specific permissions or versioning options.</li>
+                            <li>Click <strong>Create bucket</strong> to complete the process.</li>
+                        </ul>
+                        
+                        <div class="code-block">
+                            <pre><code># No CLI commands needed - use AWS Console UI</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">2</div>
+                        <h2>Upload Files to the Bucket</h2>
+                    </div>
+                    <div class="step-content">
+                        <h3>Access Your Bucket</h3>
+                        <p>After creating the bucket, click on the bucket name (<code>dmi-staticwebpage</code>).</p>
+                        
+                        <h3>Upload Files</h3>
+                        <ul>
+                            <li>Click the <strong>Upload</strong> button.</li>
+                            <li>Click on <strong>Add files</strong> to select the files from your local computer.</li>
+                            <li>Select all the files you need to upload (including <code>index.html</code> and any other assets such as CSS, JS, images, etc.).</li>
+                            <li>Once files are selected, click <strong>Upload</strong>.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">3</div>
+                        <h2>Enable Static Website Hosting</h2>
+                    </div>
+                    <div class="step-content">
+                        <h3>Go to the Properties Tab</h3>
+                        <p>Once inside the bucket, click on the <strong>Properties</strong> tab.</p>
+                        
+                        <h3>Enable Static Website Hosting</h3>
+                        <ul>
+                            <li>Scroll down to the <strong>Static website hosting</strong> section.</li>
+                            <li>Choose <strong>Enable</strong>.</li>
+                            <li>For <strong>Index document</strong>, type <code>index.html</code> (the name of your homepage).</li>
+                            <li>Optionally, for <strong>Error document</strong>, you can type <code>error.html</code> (if you have a custom error page).</li>
+                            <li>Click <strong>Save changes</strong>.</li>
+                        </ul>
+                        
+                        <h3>Copy the Endpoint URL</h3>
+                        <p>After enabling static website hosting, AWS will provide you with a URL for accessing your site, like:</p>
+                        <div class="code-block">
+                            <pre><code>http://dmi-staticwebpage.s3-website-us-east-1.amazonaws.com/</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">4</div>
+                        <h2>Set Bucket Policy for Public Access</h2>
+                    </div>
+                    <div class="step-content">
+                        <h3>Go to the Permissions Tab</h3>
+                        <p>Inside the S3 bucket, click on the <strong>Permissions</strong> tab.</p>
+                        
+                        <h3>Edit the Bucket Policy</h3>
+                        <ul>
+                            <li>Scroll down to <strong>Bucket Policy</strong> and click <strong>Edit</strong>.</li>
+                            <li>Add the following policy (replace the <code>dmi-staticwebpage</code> with your bucket name):</li>
+                        </ul>
+                        
+                        <div class="code-block">
+                            <pre><code>{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::dmi-staticwebpage/*"
+    }
+  ]
+}</code></pre>
+                        </div>
+                        
+                        <p>This policy allows anyone to view the files publicly on your static website.</p>
+                        <p>Click <strong>Save changes</strong>.</p>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">5</div>
+                        <h2>Test the Static Website Access</h2>
+                    </div>
+                    <div class="step-content">
+                        <h3>Check the URL</h3>
+                        <p>After uploading your files, enabling static hosting, and setting the bucket policy, your website should be accessible at the S3 endpoint you copied earlier:</p>
+                        
+                        <div class="code-block">
+                            <pre><code>http://dmi-staticwebpage.s3-website-us-east-1.amazonaws.com/</code></pre>
+                        </div>
+                        
+                        <h3>Test Your Website</h3>
+                        <ul>
+                            <li>Open the URL in a web browser to check if your website is live.</li>
+                            <li>If <code>index.html</code> loads correctly, your website is working.</li>
+                        </ul>
+                        
+                        <div class="success-box">
+                            <i class="fas fa-check-circle"></i>
+                            <p>Congratulations! Your static website is now hosted on Amazon S3.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="guide-sidebar">
+                <div class="sidebar-card">
+                    <h3>Prerequisites</h3>
+                    <ul>
+                        <li>AWS Account</li>
+                        <li>Static website files (HTML, CSS, JS)</li>
+                        <li>Basic knowledge of AWS Console</li>
+                    </ul>
+                </div>
+                
+                <div class="sidebar-card">
+                    <h3>Estimated Cost</h3>
+                    <p>~$0.50 per month (for low traffic sites)</p>
+                    <p><small>Based on S3 standard storage rates</small></p>
+                </div>
+                
+                <div class="sidebar-card">
+                    <h3>Architecture Diagram</h3>
+                    <div class="diagram-placeholder">
+                        <img src="images/s3-diagram.png" alt="S3 Hosting Architecture">
+                        <p>S3 Static Website Hosting Architecture</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <!-- Summary Section -->
+        <section class="summary-section">
+            <h2>Summary: S3 Static Website Hosting Advantages</h2>
+            <div class="summary-content">
+                <div class="summary-points">
+                    <h3>What Makes S3 Hosting Special</h3>
+                    <p>Amazon S3 provides an exceptionally efficient way to host static websites with several distinct advantages:</p>
+                    
+                    <div class="advantages">
+                        <div class="advantage">
+                            <i class="fas fa-dollar-sign"></i>
+                            <h4>Cost Effective</h4>
+                            <p>You only pay for storage and data transfer, with no ongoing server costs</p>
+                        </div>
+                        <div class="advantage">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <h4>High Performance</h4>
+                            <p>S3 delivers content with low latency and high throughput</p>
+                        </div>
+                        <div class="advantage">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                            <h4>Limitless Scaling</h4>
+                            <p>Automatically handles traffic spikes without any configuration</p>
+                        </div>
+                        <div class="advantage">
+                            <i class="fas fa-shield-alt"></i>
+                            <h4>Reliable</h4>
+                            <p>Built on AWS's proven infrastructure with 99.9% availability</p>
+                        </div>
+                    </div>
+                    
+                    <h3>Ideal Use Cases</h3>
+                    <p>S3 static website hosting is perfect for:</p>
+                    <ul>
+                        <li>Company brochures and marketing sites</li>
+                        <li>Documentation and knowledge bases</li>
+                        <li>Single Page Applications (SPAs) like React, Vue, or Angular</li>
+                        <li>Static blogs built with generators like Jekyll or Hugo</li>
+                        <li>Landing pages and campaign microsites</li>
+                        <li>Portfolio websites for individuals and agencies</li>
+                    </ul>
+                    
+                    <h3>When to Consider Alternatives</h3>
+                    <p>While S3 is excellent for static content, consider these alternatives when you need:</p>
+                    <div class="alternatives">
+                        <div class="alternative">
+                            <h4>Server-Side Processing</h4>
+                            <p>For dynamic content, consider EC2, Elastic Beanstalk, or Lambda</p>
+                        </div>
+                        <div class="alternative">
+                            <h4>Advanced Routing</h4>
+                            <p>For complex URL rewriting, consider CloudFront Functions</p>
+                        </div>
+                        <div class="alternative">
+                            <h4>WebSockets</h4>
+                            <p>For real-time applications, consider API Gateway with WebSockets</p>
+                        </div>
+                    </div>
+                    
+                    <h3>Enhancing Your S3 Website</h3>
+                    <p>Take your static website to the next level with these AWS services:</p>
+                    <ol>
+                        <li><strong>CloudFront CDN:</strong> Distribute content globally for faster loading times</li>
+                        <li><strong>Route 53:</strong> Use a custom domain name with DNS management</li>
+                        <li><strong>ACM:</strong> Add free SSL/TLS certificates for HTTPS</li>
+                        <li><strong>WAF:</strong> Protect your site from common web exploits</li>
+                        <li><strong>Lambda@Edge:</strong> Run code at CDN locations for dynamic content</li>
+                    </ol>
+                    
+                    <div class="cost-analysis">
+                        <h3>Cost Analysis Example</h3>
+                        <p>For a typical small business website (5GB storage, 50GB monthly transfer):</p>
+                        <ul>
+                            <li>S3 Storage: $0.023 per GB = $0.12/month</li>
+                            <li>Data Transfer: $0.09 per GB = $4.50/month</li>
+                            <li>Requests: $0.0004 per 1000 requests = ~$0.20/month</li>
+                            <li><strong>Total: approximately $4.82/month</strong></li>
+                        </ul>
+                        <p>Compared to traditional hosting ($10-20/month), S3 offers significant savings for static sites.</p>
+                    </div>
+                </div>
+                
+                <div class="summary-sidebar">
+                    <div class="resource-card">
+                        <h3>Next Steps</h3>
+                        <div class="next-steps-list">
+                            <a href="#" class="next-step">
+                                <i class="fas fa-cloud"></i>
+                                <span>Add CloudFront CDN</span>
+                            </a>
+                            <a href="#" class="next-step">
+                                <i class="fas fa-lock"></i>
+                                <span>Configure HTTPS</span>
+                            </a>
+                            <a href="#" class="next-step">
+                                <i class="fas fa-globe"></i>
+                                <span>Set Up Custom Domain</span>
+                            </a>
+                            <a href="#" class="next-step">
+                                <i class="fas fa-code"></i>
+                                <span>Add Dynamic Features with JavaScript</span>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <h3>S3 vs Other Options</h3>
+                        <div class="comparison">
+                            <div class="comparison-item">
+                                <span class="comparison-label">S3</span>
+                                <div class="comparison-bar" style="width: 90%;"></div>
+                                <span class="comparison-value">Static Sites</span>
+                            </div>
+                            <div class="comparison-item">
+                                <span class="comparison-label">Amplify</span>
+                                <div class="comparison-bar" style="width: 70%;"></div>
+                                <span class="comparison-value">JAMstack Apps</span>
+                            </div>
+                            <div class="comparison-item">
+                                <span class="comparison-label">EC2</span>
+                                <div class="comparison-bar" style="width: 40%;"></div>
+                                <span class="comparison-value">Dynamic Sites</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <h3>Tools & Resources</h3>
+                        <ul>
+                            <li><a href="#"><i class="fas fa-wrench"></i> S3 Website Sync Scripts</a></li>
+                            <li><a href="#"><i class="fas fa-book"></i> S3 Pricing Calculator</a></li>
+                            <li><a href="#"><i class="fas fa-video"></i> CI/CD for S3 Deployment</a></li>
+                            <li><a href="#"><i class="fab fa-aws"></i> S3 Security Best Practices</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>AWS Deployment Guide</h3>
+                <p>Comprehensive tutorials for deploying applications on Amazon Web Services</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="s3-hosting.html">S3 Hosting</a></li>
+                    <li><a href="react-deployment.html">React Deployment</a></li>
+                    <li><a href="epicbooks-deployment.html">EpicBooks Deployment</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">AWS Documentation</a></li>
+                    <li><a href="#">GitHub Repositories</a></li>
+                    <li><a href="#">Community Forum</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 AWS Deployment Guide. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

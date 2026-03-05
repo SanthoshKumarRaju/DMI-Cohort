@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EpicBooks Monolith Deployment | AWS Deployment Guide</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .advanced {
+            border-left: 4px solid #ff9900;
+        }
+        
+        .warning-box {
+            display: flex;
+            align-items: center;
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+        
+        .warning-box i {
+            color: #ffc107;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <i class="fab fa-aws"></i>
+                    <span>AWS Deployment Guide</span>
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="s3-hosting.html" class="nav-link">S3 Hosting</a></li>
+                    <li class="nav-item"><a href="react-deployment.html" class="nav-link">React Deployment</a></li>
+                    <li class="nav-item"><a href="epicbooks-deployment.html" class="nav-link active">EpicBooks Deployment</a></li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="guide-container">
+        <div class="guide-header">
+            <h1>Deploy EpicBooks Monolith Application</h1>
+            <p>Step-by-step guide to deploy a full-stack application with MySQL, Node.js and Nginx</p>
+            <div class="meta-info">
+                <span><i class="fas fa-clock"></i> 30 min read</span>
+                <span><i class="fas fa-difficulty"></i> Advanced</span>
+            </div>
+        </div>
+
+        <div class="guide-content">
+            <div class="steps-container">
+                <div class="step-card advanced">
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <h2>Preparation and System Update</h2>
+                    </div>
+                    <div class="step-content">
+                        <h3>Prerequisites</h3>
+                        <p>Before beginning, make sure you have:</p>
+                        <ul>
+                            <li>A server running Amazon Linux 2 (or a local dev machine with Linux/macOS)</li>
+                            <li>Access to a user with sudo privileges</li>
+                            <li>Internet access from the server to download packages</li>
+                        </ul>
+                        
+                        <h3>Update System and Install Basic Tools</h3>
+                        <div class="code-block">
+                            <pre><code># Update all installed packages
+sudo yum update -y
+
+# Install useful system tools
+sudo yum install -y yum-utils curl wget unzip</code></pre>
+                        </div>
+                        
+                        <div class="explanation-box">
+                            <h4>Explanation:</h4>
+                            <p>Updates all installed packages on the system to their latest version. Installs useful system tools including curl, wget, and unzip for downloading files and managing packages.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-card advanced">
+                    <div class="step-header">
+                        <div class="step-number">2</div>
+                        <h2>Install Git and Clone Repository</h2>
+                    </div>
+                    <div class="step-content">
+                        <h3>Install Git</h3>
+                        <div class="code-block">
+                            <pre><code># Install Git version control system
+sudo yum install -y git</code></pre>
+                        </div>
+                        
+                        <h3>Clone the EpicBooks Repository</h3>
+                        <div class="code-block">
+                            <pre><code># Download the EpicBook project repository
+git clone https://github.com/pravinmishraaws/theepicbook.git
+
+# Move into the project directory
+cd theepicbook</code></pre>
+                        </div>
+                        
+                        <div class="explanation-box">
+                            <h4>Explanation:</h4>
+                            <p>Installs Git, a version control system, then downloads the EpicBook project repository from GitHub to your server and navigates into the project directory.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-card advanced">
+                    <div class="step-header">
+                        <div class="step-number">3</div>
+                        <h2>Install MySQL Server 5.7</h2>
+                    </div>
+                    <div class="step-content">
+                        <h3>Add MySQL Repository</h3>
+                        <div class="code-block">
+                            <pre><code># Download and install MySQL repository
+sudo yum install -y https://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
+
+# Import MySQL GPG key
+sudo rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
+
+# Disable MySQL 8.0 repository
+sudo yum-config-manager --disable mysql80-community
+
+# Enable MySQL 5.7 repository
+sudo yum-config-manager --enable mysql57-community</code></pre>
+                        </div>
+                        
+                        <h3>Install and Configure MySQL</h3>
+                        <div class="code-block">
+                            <pre><code># Install MySQL 5.7 server
+sudo yum install -y mysql-community-server
+
+# Start MySQL service
+sudo systemctl start mysqld
+
+# Enable MySQL on boot
+sudo systemctl enable mysqld
+
+# Check status
+sudo systemctl status mysqld</code></pre>
+                        </div>
+                        
+                        <div class="warning-box">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>MySQL 5.7 is used for compatibility with the EpicBooks application. Newer versions may require adjustments to the application code.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-card advanced">
+                    <div class="step-header">
+                        <div class="step-number">4</div>
+                        <h2>Secure MySQL and Create Database</h2>
+                    </div>
+                    <div class="step-content">
+                        <h3>Get Temporary Password and Secure MySQL</h3>
+                        <div class="code-block">
+                            <pre><code># Get temporary password
+sudo grep 'temporary password' /var/log/mysqld.log
+
+# Secure MySQL installation
+sudo mysql_secure_installation</code></pre>
+                        </div>
+                        
+                        <h3>Create Application Database</h3>
+                        <div class="code-block">
+                            <pre><code># Log into MySQL
+mysql -u root -p
+
+# Create database
+CREATE DATABASE bookstore;
+
+# Exit MySQL
+EXIT;</code></pre>
+                        </div>
+                        
+                        <h3>Import Database Schema and Data</h3>
+                        <div class="code-block">
+                            <pre><code># Import schema
+mysql -u root -p bookstore < db/BuyTheBook_Schema.sql
+
+# Import seed data
+mysql -u root -p bookstore < db/author_seed.sql
+mysql -u root -p bookstore < db/books_seed.sql</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-card advanced">
+                    <div class="step-header">
+                        <div class="step-number">5</div>
+                        <h2>Install Node.js using NVM</h2>
+                    </div>
+                    <div class="step-content">
+                        <h3>Install Node Version Manager (NVM)</h3>
+                        <div class="code-block">
+                            <pre><code># Download and install NVM
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
+
+# Load NVM
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"</code></pre>
+                        </div>
+                        
+                        <h3>Install and Use Node.js</h3>
+                        <div class="code-block">
+                            <pre><code># Install Node.js version 17
+nvm install 17
+
+# Use Node.js version 17
+nvm use 17
+
+# Verify installation
+node -v
+npm -v</code></pre>
+                        </div>
+                        
+                        <div class="explanation-box">
+                            <h4>Explanation:</h4>
+                            <p>NVM (Node Version Manager) allows you to install and manage multiple versions of Node.js. This is useful for ensuring compatibility with different projects.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-card advanced">
+                    <div class="step-header">
+                        <div class="step-number">6</div>
+                        <h2>Configure Application and Database</h2>
+                    </div>
+                    <div class="step-content">
+                        <h3>Install Project Dependencies</h3>
+                        <div class="code-block">
+                            <pre><code># Navigate to project directory
+cd theepicbook
+
+# Install dependencies
+npm install</code></pre>
+                        </div>
+                        
+                        <h3>Configure Database Connection</h3>
+                        <p>Edit the config.json file to match your MySQL credentials:</p>
+                        
+                        <div class="code-block">
+                            <pre><code>{
+  "database": {
+    "host": "localhost",
+    "port": 3306,
+    "user": "epicuser",
+    "password": "StrongPassword!23",
+    "database": "bookstore"
+  }
+}</code></pre>
+                        </div>
+                        
+                        <h3>Create Dedicated MySQL User</h3>
+                        <div class="code-block">
+                            <pre><code># Log into MySQL
+mysql -u root -p
+
+# Create user and grant privileges
+CREATE USER 'epicuser'@'localhost' IDENTIFIED BY 'StrongPassword!23';
+GRANT ALL PRIVILEGES ON bookstore.* TO 'epicuser'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-card advanced">
+                    <div class="step-header">
+                        <div class="step-number">7</div>
+                        <h2>Configure Nginx as Reverse Proxy</h2>
+                    </div>
+                    <div class="step-content">
+                        <h3>Install and Enable Nginx</h3>
+                        <div class="code-block">
+                            <pre><code># Install EPEL repository
+sudo yum install -y epel-release
+
+# Install Nginx
+sudo yum install -y nginx
+
+# Start Nginx
+sudo systemctl start nginx
+
+# Enable Nginx on boot
+sudo systemctl enable nginx</code></pre>
+                        </div>
+                        
+                        <h3>Configure Nginx for EpicBooks</h3>
+                        <p>Create configuration file /etc/nginx/conf.d/theepicbooks.conf:</p>
+                        
+                        <div class="code-block">
+                            <pre><code>server {
+    listen 80;
+    server_name your-public-ip-or-domain;
+
+    location / {
+        proxy_pass http://localhost:8080;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}</code></pre>
+                        </div>
+                        
+                        <h3>Test and Restart Nginx</h3>
+                        <div class="code-block">
+                            <pre><code># Test configuration
+sudo nginx -t
+
+# Restart Nginx
+sudo systemctl restart nginx</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-card advanced">
+                    <div class="step-header">
+                        <div class="step-number">8</div>
+                        <h2>Start Application and Verify</h2>
+                    </div>
+                    <div class="step-content">
+                        <h3>Start the Node.js Application</h3>
+                        <div class="code-block">
+                            <pre><code># Navigate to project directory
+cd theepicbook
+
+# Start the application
+node server.js</code></pre>
+                        </div>
+                        
+                        <h3>Configure Firewall</h3>
+                        <div class="code-block">
+                            <pre><code># Check firewall status
+sudo systemctl status firewalld
+
+# Open HTTP and HTTPS ports
+sudo firewall-cmd --permanent --add-service=http
+sudo firewall-cmd --permanent --add-service=https
+sudo firewall-cmd --reload</code></pre>
+                        </div>
+                        
+                        <h3>Access Your Application</h3>
+                        <p>Open your web browser and navigate to your server's public IP address:</p>
+                        
+                        <div class="code-block">
+                            <pre><code>http://your-server-public-ip</code></pre>
+                        </div>
+                        
+                        <div class="success-box">
+                            <i class="fas fa-check-circle"></i>
+                            <p>Congratulations! Your EpicBooks application is now successfully deployed and running.</p>
+                        </div>
+
+                        <div class="action-buttons">
+                            <a href="index.html" class="btn btn-primary">Back to Home</a>
+                            <a href="react-deployment.html" class="btn btn-secondary">Previous: React Deployment</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="guide-sidebar">
+                <div class="sidebar-card">
+                    <h3>Software Stack</h3>
+                    <ul>
+                        <li>MySQL Server 5.7</li>
+                        <li>Node.js & npm</li>
+                        <li>Nginx Web Server</li>
+                        <li>Git Version Control</li>
+                    </ul>
+                </div>
+                
+                <div class="sidebar-card">
+                    <h3>Estimated Cost</h3>
+                    <p>~$0.0232 per hour ($17.00/month)</p>
+                    <p><small>Based on t2.small Linux pricing</small></p>
+                </div>
+                
+                <div class="sidebar-card">
+                    <h3>Architecture Diagram</h3>
+                    <div class="diagram-placeholder">
+                        <img src="images/epicbooks-architecture.png" alt="EpicBooks Deployment Architecture">
+                        <p>EpicBooks Application Architecture</p>
+                    </div>
+                </div>
+
+                <div class="sidebar-card">
+                    <h3>Troubleshooting Tips</h3>
+                    <ul>
+                        <li>Check MySQL service status</li>
+                        <li>Verify database connection settings</li>
+                        <li>Review Nginx error logs</li>
+                        <li>Check Node.js application logs</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+            <!-- Summary Section -->
+        <section class="summary-section">
+            <h2>Summary: EpicBooks Monolith Deployment Insights</h2>
+            <div class="summary-content">
+                <div class="summary-points">
+                    <h3>Architecture Overview</h3>
+                    <p>We deployed a traditional monolithic application with a three-tier architecture:</p>
+                    <ul>
+                        <li><strong>Presentation Tier:</strong> Node.js application serving HTML templates</li>
+                        <li><strong>Application Tier:</strong> Express.js server with business logic</li>
+                        <li><strong>Data Tier:</strong> MySQL database for persistent storage</li>
+                    </ul>
+                    
+                    <h3>Key Achievements</h3>
+                    <div class="achievements">
+                        <div class="achievement">
+                            <i class="fas fa-database"></i>
+                            <h4>Database Setup</h4>
+                            <p>Successfully installed and secured MySQL 5.7, created database schema, and imported seed data</p>
+                        </div>
+                        <div class="achievement">
+                            <i class="fas fa-server"></i>
+                            <h4>Runtime Environment</h4>
+                            <p>Configured Node.js using NVM for version management and isolation</p>
+                        </div>
+                        <div class="achievement">
+                            <i class="fas fa-exchange-alt"></i>
+                            <h4>Reverse Proxy</h4>
+                            <p>Implemented Nginx as reverse proxy to handle HTTP requests and forward to Node.js application</p>
+                        </div>
+                    </div>
+                    
+                    <h3>Why Monolith First?</h3>
+                    <p>While microservices get much attention, starting with a monolith is often the right choice for:</p>
+                    <ul>
+                        <li>Small to medium-sized applications</li>
+                        <li>Small development teams</li>
+                        <li>Faster initial development and deployment</li>
+                        <li>Simpler debugging and testing</li>
+                        <li>Easier database transactions and consistency</li>
+                    </ul>
+                    <p>The monolith-first approach allows you to quickly validate your business idea before considering a more complex distributed architecture.</p>
+                    
+                    <h3>Production Considerations</h3>
+                    <div class="considerations">
+                        <div class="consideration">
+                            <h4>Database Management</h4>
+                            <p>For production, consider using Amazon RDS instead of self-managed MySQL for better reliability, automated backups, and easier scaling.</p>
+                        </div>
+                        <div class="consideration">
+                            <h4>Application Process Management</h4>
+                            <p>Use process managers like PM2 to keep your Node.js application running, restart on failures, and manage logs.</p>
+                        </div>
+                        <div class="consideration">
+                            <h4>Environment Configuration</h4>
+                            <p>Implement proper environment-based configuration for different stages (development, staging, production).</p>
+                        </div>
+                    </div>
+                    
+                    <h3>Scaling This Architecture</h3>
+                    <p>As your application grows, consider these scaling strategies:</p>
+                    <ol>
+                        <li><strong>Vertical Scaling:</strong> Upgrade to larger EC2 instance types</li>
+                        <li><strong>Read Replicas:</strong> Add MySQL read replicas for better read performance</li>
+                        <li><strong>Load Balancing:</strong> Implement application load balancing across multiple EC2 instances</li>
+                        <li><strong>Caching:</strong> Add Redis or ElastiCache for frequently accessed data</li>
+                        <li><strong>CDN:</strong> Use CloudFront for static assets delivery</li>
+                    </ol>
+                    
+                    <div class="migration-path">
+                        <h3>Future Migration Path</h3>
+                        <p>When your monolith becomes too large, consider these evolution paths:</p>
+                        <ul>
+                            <li>Extract specific functionalities as microservices</li>
+                            <li>Implement an API gateway pattern</li>
+                            <li>Move to containerized deployment with ECS or EKS</li>
+                            <li>Adopt serverless architectures for specific components</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="summary-sidebar">
+                    <div class="resource-card">
+                        <h3>Deployment Checklist</h3>
+                        <div class="checklist">
+                            <div class="checklist-item">
+                                <input type="checkbox" checked id="check1">
+                                <label for="check1">EC2 instance created</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" checked id="check2">
+                                <label for="check2">MySQL installed and secured</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" checked id="check3">
+                                <label for="check3">Database schema imported</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" checked id="check4">
+                                <label for="check4">Node.js environment setup</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" checked id="check5">
+                                <label for="check5">Application dependencies installed</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" checked id="check6">
+                                <label for="check6">Nginx configured</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" checked id="check7">
+                                <label for="check7">Firewall configured</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" checked id="check8">
+                                <label for="check8">Application tested</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <h3>Performance Metrics</h3>
+                        <div class="metrics">
+                            <div class="metric">
+                                <span class="metric-value">200-500ms</span>
+                                <span class="metric-label">Response Time</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-value">50-100</span>
+                                <span class="metric-label">Concurrent Users</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-value">2-4GB</span>
+                                <span class="metric-label">Memory Usage</span>
+                            </div>
+                        </div>
+                        <p class="metric-note">Expected performance on t2.small instance</p>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <h3>Further Reading</h3>
+                        <ul>
+                            <li><a href="#"><i class="fas fa-book"></i> MySQL Performance Optimization</a></li>
+                            <li><a href="#"><i class="fas fa-video"></i> Node.js Production Best Practices</a></li>
+                            <li><a href="#"><i class="fas fa-tools"></i> Nginx as Reverse Proxy</a></li>
+                            <li><a href="#"><i class="fab fa-aws"></i> AWS RDS vs Self-Managed Databases</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>AWS Deployment Guide</h3>
+                <p>Comprehensive tutorials for deploying applications on Amazon Web Services</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="s3-hosting.html">S3 Hosting</a></li>
+                    <li><a href="react-deployment.html">React Deployment</a></li>
+                    <li><a href="epicbooks-deployment.html">EpicBooks Deployment</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">AWS Documentation</a></li>
+                    <li><a href="#">GitHub Repositories</a></li>
+                    <li><a href="#">Community Forum</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 AWS Deployment Guide. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
