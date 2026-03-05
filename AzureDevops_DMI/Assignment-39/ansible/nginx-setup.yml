@@ -1,0 +1,146 @@
+---
+- name: Install and Configure NGINX on Ubuntu VM
+  hosts: web_servers
+  become: yes
+    
+  tasks:
+    - name: Update apt package cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install NGINX
+      apt:
+        name: nginx
+        state: present
+
+    - name: Ensure NGINX service is started and enabled
+      systemd:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Create web root directory
+      file:
+        path: "/var/www/html"
+        state: directory
+        owner: "www-data"
+        group: "www-data"
+        mode: '0755'
+
+    - name: Configure NGINX for React app
+      copy:
+        content: |
+          server {
+              listen 80 default_server;
+              listen [::]:80 default_server;
+              
+              root /var/www/html;
+              index index.html index.htm;
+              
+              server_name _;
+              
+              # React app routing
+              location / {
+                  try_files $uri $uri/ /index.html;
+              }
+              
+              # Cache static assets
+              location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+                  expires 1y;
+                  add_header Cache-Control "public, immutable";
+              }
+              
+              # Security headers
+              add_header X-Frame-Options "SAMEORIGIN" always;
+              add_header X-XSS-Protection "1; mode=block" always;
+              add_header X-Content-Type-Options "nosniff" always;
+              
+              # Gzip compression
+              gzip on;
+              gzip_vary on;
+              gzip_min_length 1024;
+              gzip_types text/plain text/css text/xml text/javascript application/javascript application/xml+rss application/json;
+          }
+        dest: "/etc/nginx/sites-available/default"
+        backup: yes
+      notify: restart nginx
+
+    - name: Create placeholder index.html
+      copy:
+        content: |
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <title>React App - Ready for Deployment</title>
+              <style>
+                  body { 
+                      font-family: Arial, sans-serif; 
+                      margin: 0;
+                      padding: 0;
+                      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                      min-height: 100vh;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                  }
+                  .container {
+                      background: white;
+                      padding: 40px;
+                      border-radius: 15px;
+                      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                      max-width: 600px;
+                      text-align: center;
+                  }
+                  h1 { 
+                      color: #333;
+                      margin-bottom: 20px;
+                  }
+                  .status { 
+                      color: #28a745; 
+                      font-weight: bold;
+                      font-size: 1.2em;
+                  }
+                  .info {
+                      background: #f8f9fa;
+                      padding: 15px;
+                      border-radius: 8px;
+                      margin: 15px 0;
+                      text-align: left;
+                  }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <h1>🚀 React App Deployment Ready</h1>
+                  <p class="status">✅ NGINX Successfully Installed & Configured</p>
+                  
+                  <div class="info">
+                      <p><strong>VM IP:</strong> 172.172.180.18</p>
+                      <p><strong>Web Root:</strong> /var/www/html</p>
+                      <p><strong>Server:</strong> NGINX on Ubuntu</p>
+                  </div>
+                  
+                  <p>Your React application will be automatically deployed here via Azure Pipelines.</p>
+              </div>
+          </body>
+          </html>
+        dest: "/var/www/html/index.html"
+        owner: "www-data"
+        group: "www-data"
+        mode: '0644'
+
+    - name: Validate nginx configuration
+      command: nginx -t
+      register: nginx_validation
+      changed_when: false
+
+    - name: Show nginx validation result
+      debug:
+        msg: "{{ nginx_validation.stdout }}"
+
+  handlers:
+    - name: restart nginx
+      systemd:
+        name: nginx
+        state: restarted

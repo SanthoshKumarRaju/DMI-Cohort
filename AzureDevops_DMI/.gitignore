@@ -1,0 +1,40 @@
+# Terraform
+*.tfstate
+*.tfstate.*
+*.backup
+.terraform/
+# terraform.tfvars
+*.tfvars
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+*.log
+.terraform.lock.hcl
+
+# Ansible
+*.retry
+*.log
+ansible_fact_cache/
+*.yml~
+ansible.cfg
+*.md
+*.json
+
+# Python related (if used in Ansible or Terraform)
+*.pyc
+*.pyo
+__pycache__/
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# IDE-specific files (VS Code, JetBrains, etc.)
+.vscode/
+.idea/
+
+# Miscellaneous
+*.swp
+*.swo
